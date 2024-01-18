@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectblindcare/screens/splash_screen.dart';
 
 void main() {
   runApp(const BlindCareApp());
@@ -9,9 +10,9 @@ class BlindCareApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(),
+      home: SplashScreen(),
     );
   }
 }
