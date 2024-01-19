@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: const Color(0xffF2FEFE),
       body: Stack(
         alignment: Alignment.topRight,
         children: [
@@ -36,9 +37,10 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.image,
-                size: 200,
+              Image(
+                image: AssetImage("images/applogo.jpeg"),
+                width: 200,
+                height: 200,
               ),
               SizedBox(
                 height: 90,

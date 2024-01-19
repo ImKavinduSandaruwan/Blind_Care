@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: const Color(0xffF2FEFE),
       bottomNavigationBar: CurvedNavigationBar(
         items: const [
           Icon(Icons.keyboard_voice_rounded)
@@ -72,11 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Welcome Back',
+                                      'Blind Care',
                                       style: TextStyle(
                                         fontFamily: 'Poppins',
                                         fontSize: 30,
                                         letterSpacing: 1.5,
+                                        fontWeight: FontWeight.bold
                                       ),
                                     ),
                                     Text(
@@ -89,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ],
                                 ),
-                                Icon(Icons.sunny,size: 30,)
+                                Icon(Icons.sunny,size: 30,color: Colors.yellow,)
                               ],
                             ),
                             const SizedBox(
@@ -120,16 +122,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: Row(
                         children: [
-                          FunctionCard("images/map.svg","Blind Map"),
-                          FunctionCard("images/transport.svg","Transport"),
+                          FunctionCard("images/map.svg","Blind Map",(){
+                            /// Add navigation route for navigation page
+                          }),
+                          FunctionCard("images/transport.svg","Transport",(){
+                            /// Add navigation route for transport page
+                          }),
                         ],
                       ),
                     ),
                     Expanded(
                       child: Row(
                         children: [
-                          FunctionCard("images/emergency.svg","Emergency"),
-                          FunctionCard("images/service.svg","Help Center"),
+                          FunctionCard("images/emergency.svg","Emergency",(){
+                            /// Add navigation route for emergency page
+                          }),
+                          FunctionCard("images/service.svg","Help Center",(){
+                            /// Add navigation route for help center page
+                          }),
                         ],
                       ),
                     ),

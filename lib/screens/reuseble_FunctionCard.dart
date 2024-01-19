@@ -5,17 +5,16 @@ class FunctionCard extends StatelessWidget {
 
   late String fileName;
   late String text;
+  late VoidCallback onPress;
 
-  FunctionCard(this.fileName, this.text, {super.key});
+  FunctionCard(this.fileName, this.text, this.onPress,{super.key});
 
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        onTap: (){
-
-        },
+        onTap: onPress,
         child: Container(
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
