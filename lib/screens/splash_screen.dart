@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/constant.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,13 +19,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   /// Navigate to the main page after 1.5 seconds
   Future<void> navigateToMainWindow() async {
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: splashDurationTime));
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
   }
 
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
         alignment: Alignment.topRight,
@@ -61,26 +64,26 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
           Positioned(
-            top: -40,
-            right: 290,
+            top: -screenHeight * 0.08,
+            right: screenWidth * 0.69,
             child: Container(
               width: 200,
               height: 200,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0x603FC979),
+                color: fadedRoundColors,
               ),
             ),
           ),
           Positioned(
-            top: -110,
-            right: 200,
+            top: -screenWidth * 0.29,
+            right: screenWidth * 0.49,
             child: Container(
               width: 200,
               height: 200,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0x603FC979),
+                color: fadedRoundColors,
               ),
             ),
           ),

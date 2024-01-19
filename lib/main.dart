@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projectblindcare/screens/splash_screen.dart';
-
 void main() {
   runApp(const BlindCareApp());
 }
