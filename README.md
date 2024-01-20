@@ -43,12 +43,10 @@ Wireframe:- https://www.figma.com/file/ryLADA7f3Zt00YUiW2IWIC/SDGP?type=design&n
 If you have any feedback, please reach out to us at kavindu.20221150@iit.ac.lk
 
 
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+<img src="https://github.com/ImKavinduSandaruwan/Blind_Care/blob/master/images/applogo.jpeg" alt="Logo" width="300"/>
 
 
 ## Tech Stack
 
-**Client:** Dart, Flutter
-
-**Server:** Node, Python, Firebase
+Dart, Flutter, Python, Firebase, Machine Learning, Deep Learning
 
