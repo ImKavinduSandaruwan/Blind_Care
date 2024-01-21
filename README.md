@@ -48,5 +48,5 @@ If you have any feedback, please reach out to us at kavindu.20221150@iit.ac.lk
 
 ## Tech Stack
 
-Dart, Flutter, Python, Firebase, Machine Learning, Deep Learning
+Dart, Flutter, Python, Firebase, Machine Learning, Deep Learning, Git, Docker
 
