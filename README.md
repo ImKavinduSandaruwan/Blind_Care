@@ -6,7 +6,7 @@ A Machine Learning based mobile application
 ## Authors
 
 - [@ImKavinduSandaruwan](https://github.com/ImKavinduSandaruwan)
-- [@Malshi Sathsarani](https://github.com/)
+- [@Malshi Sathsarani](https://github.com/malshisathsarani)
 - [@Yohani Gankanda](https://github.com/)
 - [@Ginura Premawardana](https://github.com/)
 - [@Infas Iqbal](https://github.com/)
