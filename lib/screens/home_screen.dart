@@ -3,7 +3,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:projectblindcare/screens/object_detection.dart';
-import 'package:projectblindcare/screens/reuseble_FunctionCard.dart';
+import 'package:projectblindcare/components/reuseble_FunctionCard.dart';
 
 import 'emergency_screen.dart';
 
