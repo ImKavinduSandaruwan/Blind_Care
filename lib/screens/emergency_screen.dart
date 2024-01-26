@@ -6,13 +6,14 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:projectblindcare/screens/home_screen.dart';
 
 
-main(){
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
-
-}
+// main(){
+//   WidgetsFlutterBinding.ensureInitialized();
+//   runApp(MyApp());
+//
+// }
 
 
 
@@ -38,17 +39,20 @@ class _emergencyFeature extends State<EmergencyScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
+        double screenWidth = MediaQuery.of(context).size.width;
+        double screenHeight = MediaQuery.of(context).size.height;
         return Container(
           child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(12.0),
               child:Container(
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      width: double.infinity,
-                      height: 200.0,
+                      // color: Colors.cyan,
+                      width: screenWidth,
+                      height: screenHeight * 0.25,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -69,11 +73,13 @@ class _emergencyFeature extends State<EmergencyScreen> {
                       ),
                     ),
                     Container(
+                      // color: Colors.cyan,
+
                       child: Column(
                         children: [
                           Text("Contact List",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
                           Container(
-                            height: 150.0,
+                            height: screenHeight * 0.15,
                             child: ListView(
                               children: [
                                 Padding(
@@ -183,6 +189,12 @@ class _emergencyFeature extends State<EmergencyScreen> {
               color: Colors.black,
               fontFamily: 'Poppins'
           ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
         ),
       ),
       body: GoogleMap(
