@@ -5,6 +5,8 @@ import 'package:projectblindcare/constants/constant.dart';
 import 'package:projectblindcare/screens/object_detection.dart';
 import 'package:projectblindcare/screens/reuseble_FunctionCard.dart';
 
+import 'emergency_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -136,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           FunctionCard("images/emergency.svg","Emergency",(){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                             /// Add navigation route for emergency page
                           }),
                           FunctionCard("images/service.svg","Help Center",(){
