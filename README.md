@@ -24,9 +24,9 @@ A Machine Learning based mobile application
 Wireframe:- https://www.figma.com/file/ryLADA7f3Zt00YUiW2IWIC/SDGP?type=design&node-id=0-1&mode=design&t=a5a3XoFfHnE6DISN-0
 
 
-## Documentation
+## Website
 
-[Documentation](https://linktodocumentation)
+[Website](https://imkavindusandaruwan.github.io/blind-care-website/)
 
 
 ## Features
