@@ -47,191 +47,401 @@ class EmergencySettingsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          child: Container(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Contact List",style: TextStyle(fontSize: 28,color: Colors.black,fontFamily:'Arial',fontWeight: FontWeight.bold)),
-                ),
-                Container(
-                  width: screenWidth,
-                  height: screenHeight*0.6,
-                  // color: Colors.grey,
-                  child: ListView(
-                    children: [
-                      Column(
-                        children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
+          child: Center(
+            child: Container(
+              width: screenWidth*0.9,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("Contact List",style: TextStyle(fontSize: 28,color: Colors.black,fontFamily:'Arial',fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.green),
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      width: screenWidth,
+                      // height: screenHeight*0.6,
+                      // color: Colors.grey,
+                      child: ListTile(
+                        title: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                    child: Icon(Icons.account_circle),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
-
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                    child: Text("Ginura"),
+                                  )
+                                ],
+                              ),
+                              Divider(),
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                    child: Icon(Icons.phone),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: 100.0,
-                                    decoration: BoxDecoration(
-                                      color: mainThemeColor,
-                                      shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                                      ),
-                                    child: IconButton(
-                                      onPressed: (){
-                                        openDialogBox(context);
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                      ),
-                                    ),
-                                    ),
-                                ),
-                              ],
-                            ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                    child: Text("+94703088444"),
+                                  )
+                                ],
+                              ),
+                            ],
                           ),
-                          Container(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                            color: Colors.red,
+                          onPressed: (){},
+                        ),
 
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: 100.0,
-                                    decoration: BoxDecoration(
-                                      color: mainThemeColor,
-                                      shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: (){},
-                                      icon: Icon(
-                                        Icons.edit,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
-
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: 100.0,
-                                    decoration: BoxDecoration(
-                                      color: mainThemeColor,
-                                      shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: (){},
-                                      icon: Icon(
-                                        Icons.edit,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: screenWidth*0.9,
-                                    child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                                    color: Color.fromRGBO(203, 255, 211, 1),
-
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Container(
-                                    width: 100.0,
-                                    decoration: BoxDecoration(
-                                      color: mainThemeColor,
-                                      shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: (){},
-                                      icon: Icon(
-                                        Icons.edit,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                        onTap: (){
+                          openDialogBox(context);
+                        },
                       )
-                    ],
 
-                  )
-                ),
+                      // ListView(
+                      //   children: [
+                      //     Column(
+                      //       children: [
+                      //         Container(
+                      //           child: Column(
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //                 ),
+                      //               ),
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //
+                      //                 ),
+                      //               ),
+                      //               ElevatedButton.icon(
+                      //                   onPressed: (){openDialogBox(context);},
+                      //                   icon: Icon(Icons.edit),
+                      //                 style: ElevatedButton.styleFrom(
+                      //                   backgroundColor: Colors.grey
+                      //                 ),
+                      //                   label: Text("Edit"),
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     )
+                      //   ],
+                      //
+                      // )
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        width: screenWidth,
+                        // height: screenHeight*0.6,
+                        // color: Colors.grey,
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.account_circle),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text("Ginura"),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.phone),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text("+94703088444"),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                            onPressed: (){},
+                          ),
 
-              ],
+                          onTap: (){
+                            openDialogBox(context);
+                          },
+                        )
+
+                      // ListView(
+                      //   children: [
+                      //     Column(
+                      //       children: [
+                      //         Container(
+                      //           child: Column(
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //                 ),
+                      //               ),
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //
+                      //                 ),
+                      //               ),
+                      //               ElevatedButton.icon(
+                      //                   onPressed: (){openDialogBox(context);},
+                      //                   icon: Icon(Icons.edit),
+                      //                 style: ElevatedButton.styleFrom(
+                      //                   backgroundColor: Colors.grey
+                      //                 ),
+                      //                   label: Text("Edit"),
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     )
+                      //   ],
+                      //
+                      // )
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        width: screenWidth,
+                        // height: screenHeight*0.6,
+                        // color: Colors.grey,
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.account_circle),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text("Ginura"),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.phone),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text("+94703088444"),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                            onPressed: (){},
+                          ),
+
+                          onTap: (){
+                            openDialogBox(context);
+                          },
+                        )
+
+                      // ListView(
+                      //   children: [
+                      //     Column(
+                      //       children: [
+                      //         Container(
+                      //           child: Column(
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //                 ),
+                      //               ),
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //
+                      //                 ),
+                      //               ),
+                      //               ElevatedButton.icon(
+                      //                   onPressed: (){openDialogBox(context);},
+                      //                   icon: Icon(Icons.edit),
+                      //                 style: ElevatedButton.styleFrom(
+                      //                   backgroundColor: Colors.grey
+                      //                 ),
+                      //                   label: Text("Edit"),
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     )
+                      //   ],
+                      //
+                      // )
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        width: screenWidth,
+                        // height: screenHeight*0.6,
+                        // color: Colors.grey,
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.account_circle),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text("Ginura"),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.phone),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text("+94703088444"),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                            onPressed: (){},
+                          ),
+
+                          onTap: (){
+                            openDialogBox(context);
+                          },
+                        )
+
+                      // ListView(
+                      //   children: [
+                      //     Column(
+                      //       children: [
+                      //         Container(
+                      //           child: Column(
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //                 ),
+                      //               ),
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(4.0),
+                      //                 child: Container(
+                      //                   width: screenWidth*0.9,
+                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
+                      //                   color: Color.fromRGBO(203, 255, 211, 1),
+                      //
+                      //                 ),
+                      //               ),
+                      //               ElevatedButton.icon(
+                      //                   onPressed: (){openDialogBox(context);},
+                      //                   icon: Icon(Icons.edit),
+                      //                 style: ElevatedButton.styleFrom(
+                      //                   backgroundColor: Colors.grey
+                      //                 ),
+                      //                   label: Text("Edit"),
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     )
+                      //   ],
+                      //
+                      // )
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -278,31 +488,7 @@ class EmergencySettingsScreen extends StatelessWidget {
       )
   );
 
-  // Future openDialogBox(BuildContext context) => showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: Text("Contact 1"),
-  //       content: Container(
-  //         child: Column(
-  //           children: [
-  //             TextField(
-  //               decoration: InputDecoration(hintText: 'Ginura'),
-  //             ),
-  //             TextField(
-  //               decoration: InputDecoration(hintText: 'Ginura'),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //             onPressed: (){
-  //
-  //             },
-  //             child: Text("Done"))
-  //       ],
-  //     )
-  // );
+
 
 }
 
