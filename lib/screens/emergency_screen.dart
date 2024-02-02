@@ -1,19 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
-
-
-// main(){
-//   WidgetsFlutterBinding.ensureInitialized();
-//   runApp(MyApp());
-//
-// }
 
 
 
@@ -50,7 +42,6 @@ class _emergencyFeature extends State<EmergencyScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      // color: Colors.cyan,
                       width: screenWidth,
                       height: screenHeight * 0.25,
                       child: Column(
@@ -61,7 +52,7 @@ class _emergencyFeature extends State<EmergencyScreen> {
                           Text("Contact nearest police station",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
                           ElevatedButton(
                               onPressed: (){
-                                FlutterPhoneDirectCaller.callNumber('+94763088444');
+                                FlutterPhoneDirectCaller.callNumber('+94703088444');
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
@@ -196,6 +187,15 @@ class _emergencyFeature extends State<EmergencyScreen> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EmergencySettingsScreen()));
+              print('Settings button pressed');
+            },
+          ),
+        ],
       ),
       body: GoogleMap(
         initialCameraPosition:initialCameraPosition,
@@ -227,9 +227,6 @@ class _emergencyFeature extends State<EmergencyScreen> {
     );
   }
 
-
-
-
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -258,6 +255,8 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
     return position;
   }
+
+
 
 }
 
