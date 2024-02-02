@@ -1,8 +1,11 @@
+
+import 'package:fast_contacts/fast_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_screen.dart';
@@ -15,7 +18,6 @@ import 'package:projectblindcare/screens/home_screen.dart';
 class EmergencySettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -23,7 +25,7 @@ class EmergencySettingsScreen extends StatelessWidget {
       backgroundColor: const Color(0xffF2FEFE),
       bottomNavigationBar: CurvedNavigationBar(
         items: const [
-          Icon(Icons.keyboard_voice_rounded)
+          Icon(Icons.keyboard_voice_rounded),
         ],
         color: mainThemeColor,
         backgroundColor: Colors.transparent,
@@ -34,8 +36,8 @@ class EmergencySettingsScreen extends StatelessWidget {
         title: const Text(
           "Emergency Settings",
           style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Poppins'
+            color: Colors.black,
+            fontFamily: 'Poppins',
           ),
         ),
         leading: IconButton(
@@ -45,415 +47,77 @@ class EmergencySettingsScreen extends StatelessWidget {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Center(
-            child: Container(
-              width: screenWidth*0.9,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text("Contact List",style: TextStyle(fontSize: 28,color: Colors.black,fontFamily:'Arial',fontWeight: FontWeight.bold)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
+      body: FutureBuilder(
+        future: getContacts(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return const Center(
+              child: SizedBox(height: 50, child: CircularProgressIndicator()),
+            );
+          }
+          return Container(
+            width: screenWidth, // Set appropriate width
+            height: screenHeight, // Set appropriate height
+            child: ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                Contact contact = snapshot.data[index];
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
                         border: Border.all(color: Colors.green),
                         borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: ListTile(
+                      title: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children:<Widget> [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                  child: Icon(Icons.account_circle),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                  child: Text(contact.displayName),
+                                ),
+                              ],
+                            ),
+                            Divider(),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                  child: Icon(Icons.phone),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                  child: Text(contact.phones[0].number),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                      width: screenWidth,
-                      // height: screenHeight*0.6,
-                      // color: Colors.grey,
-                      child: ListTile(
-                        title: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                    child: Icon(Icons.account_circle),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                    child: Text("Ginura"),
-                                  )
-                                ],
-                              ),
-                              Divider(),
-                              Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                    child: Icon(Icons.phone),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                    child: Text("+94703088444"),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete),
-                            color: Colors.red,
-                          onPressed: (){},
-                        ),
-
-                        onTap: (){
-                          openDialogBox(context);
-                        },
-                      )
-
-                      // ListView(
-                      //   children: [
-                      //     Column(
-                      //       children: [
-                      //         Container(
-                      //           child: Column(
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //                 ),
-                      //               ),
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //
-                      //                 ),
-                      //               ),
-                      //               ElevatedButton.icon(
-                      //                   onPressed: (){openDialogBox(context);},
-                      //                   icon: Icon(Icons.edit),
-                      //                 style: ElevatedButton.styleFrom(
-                      //                   backgroundColor: Colors.grey
-                      //                 ),
-                      //                   label: Text("Edit"),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     )
-                      //   ],
-                      //
-                      // )
+                      trailing:  IconButton(
+                        icon: Icon(Icons.emergency),
+                        color: Colors.red,
+                        onPressed: (){},
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.green),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        width: screenWidth,
-                        // height: screenHeight*0.6,
-                        // color: Colors.grey,
-                        child: ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Icon(Icons.account_circle),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Text("Ginura"),
-                                    )
-                                  ],
-                                ),
-                                Divider(),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Icon(Icons.phone),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Text("+94703088444"),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            color: Colors.red,
-                            onPressed: (){},
-                          ),
-
-                          onTap: (){
-                            openDialogBox(context);
-                          },
-                        )
-
-                      // ListView(
-                      //   children: [
-                      //     Column(
-                      //       children: [
-                      //         Container(
-                      //           child: Column(
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //                 ),
-                      //               ),
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //
-                      //                 ),
-                      //               ),
-                      //               ElevatedButton.icon(
-                      //                   onPressed: (){openDialogBox(context);},
-                      //                   icon: Icon(Icons.edit),
-                      //                 style: ElevatedButton.styleFrom(
-                      //                   backgroundColor: Colors.grey
-                      //                 ),
-                      //                   label: Text("Edit"),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     )
-                      //   ],
-                      //
-                      // )
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.green),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        width: screenWidth,
-                        // height: screenHeight*0.6,
-                        // color: Colors.grey,
-                        child: ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Icon(Icons.account_circle),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Text("Ginura"),
-                                    )
-                                  ],
-                                ),
-                                Divider(),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Icon(Icons.phone),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Text("+94703088444"),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            color: Colors.red,
-                            onPressed: (){},
-                          ),
-
-                          onTap: (){
-                            openDialogBox(context);
-                          },
-                        )
-
-                      // ListView(
-                      //   children: [
-                      //     Column(
-                      //       children: [
-                      //         Container(
-                      //           child: Column(
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //                 ),
-                      //               ),
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //
-                      //                 ),
-                      //               ),
-                      //               ElevatedButton.icon(
-                      //                   onPressed: (){openDialogBox(context);},
-                      //                   icon: Icon(Icons.edit),
-                      //                 style: ElevatedButton.styleFrom(
-                      //                   backgroundColor: Colors.grey
-                      //                 ),
-                      //                   label: Text("Edit"),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     )
-                      //   ],
-                      //
-                      // )
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0.0,top: 8.0,right: 0.0,bottom: 8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.green),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        width: screenWidth,
-                        // height: screenHeight*0.6,
-                        // color: Colors.grey,
-                        child: ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Icon(Icons.account_circle),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Text("Ginura"),
-                                    )
-                                  ],
-                                ),
-                                Divider(),
-                                Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Icon(Icons.phone),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                      child: Text("+94703088444"),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            color: Colors.red,
-                            onPressed: (){},
-                          ),
-
-                          onTap: (){
-                            openDialogBox(context);
-                          },
-                        )
-
-                      // ListView(
-                      //   children: [
-                      //     Column(
-                      //       children: [
-                      //         Container(
-                      //           child: Column(
-                      //             children: [
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //                 ),
-                      //               ),
-                      //               Padding(
-                      //                 padding: const EdgeInsets.all(4.0),
-                      //                 child: Container(
-                      //                   width: screenWidth*0.9,
-                      //                   child: Center(child: Text("Person 1",style: TextStyle(fontSize: 22,fontFamily:'Arial'))),
-                      //                   color: Color.fromRGBO(203, 255, 211, 1),
-                      //
-                      //                 ),
-                      //               ),
-                      //               ElevatedButton.icon(
-                      //                   onPressed: (){openDialogBox(context);},
-                      //                   icon: Icon(Icons.edit),
-                      //                 style: ElevatedButton.styleFrom(
-                      //                   backgroundColor: Colors.grey
-                      //                 ),
-                      //                   label: Text("Edit"),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     )
-                      //   ],
-                      //
-                      // )
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          ),
-        ),
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
-        label: Icon(Icons.add),
-      ),
-
     );
   }
+
 
   Future openDialogBox(BuildContext context) => showDialog(
       context: context,
@@ -488,7 +152,19 @@ class EmergencySettingsScreen extends StatelessWidget {
       )
   );
 
+  Future<List<Contact>> getContacts() async {
 
+    bool isGranted = await Permission.contacts.status.isGranted;
+
+    if(!isGranted){
+      isGranted = await Permission.contacts.request().isGranted;
+    }
+
+    if(isGranted){
+      return await FastContacts.getAllContacts();
+    }
+    return [];
+  }
 
 }
 
