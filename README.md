@@ -7,7 +7,7 @@ A Machine Learning based mobile application
 
 - [@ImKavinduSandaruwan](https://github.com/ImKavinduSandaruwan)
 - [@Malshi Sathsarani](https://github.com/malshisathsarani)
-- [@Yohani Gankanda](https://github.com/)
+- [@Yohani Gankanda](https://github.com/YohaniGankanda)
 - [@Ginura Premawardana](https://github.com/)
 - [@Infas Iqbal](https://github.com/)
 
