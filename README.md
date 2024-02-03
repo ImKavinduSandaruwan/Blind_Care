@@ -26,7 +26,7 @@ Wireframe:- https://www.figma.com/file/ryLADA7f3Zt00YUiW2IWIC/SDGP?type=design&n
 
 ## Website
 
-[Website](https://imkavindusandaruwan.github.io/blind-care-website/)
+[blindcare.live](https://blindcare.live/)
 
 
 ## Features
