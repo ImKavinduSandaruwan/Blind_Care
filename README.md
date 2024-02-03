@@ -3,7 +3,7 @@
 
 A Machine Learning based mobile application
 
-## Authors
+## Development Team
 
 - [@ImKavinduSandaruwan](https://github.com/ImKavinduSandaruwan)
 - [@Malshi Sathsarani](https://github.com/malshisathsarani)
@@ -19,7 +19,7 @@ A Machine Learning based mobile application
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
 
-## Demo
+## Wireframe
 
 Wireframe:- https://www.figma.com/file/ryLADA7f3Zt00YUiW2IWIC/SDGP?type=design&node-id=0-1&mode=design&t=a5a3XoFfHnE6DISN-0
 
