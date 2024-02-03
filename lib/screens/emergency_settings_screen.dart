@@ -21,6 +21,7 @@ class EmergencySettingsScreen extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+
     return Scaffold(
       backgroundColor: const Color(0xffF2FEFE),
       bottomNavigationBar: CurvedNavigationBar(
@@ -75,6 +76,7 @@ class EmergencySettingsScreen extends StatelessWidget {
                         child: Column(
                           children:<Widget> [
                             Row(
+
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
@@ -105,7 +107,9 @@ class EmergencySettingsScreen extends StatelessWidget {
                       trailing:  IconButton(
                         icon: Icon(Icons.emergency),
                         color: Colors.red,
-                        onPressed: (){},
+                        onPressed: (){
+                          EmergencyCantactListHandler.addDynamicWidget(contact.displayName,contact.phones[0].number);
+                        },
                       ),
                     ),
                   ),
@@ -165,6 +169,8 @@ class EmergencySettingsScreen extends StatelessWidget {
     }
     return [];
   }
+
+
 
 }
 
