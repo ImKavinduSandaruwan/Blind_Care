@@ -27,6 +27,8 @@ class EmergencyScreen extends StatefulWidget {
 
 class _emergencyFeature extends State<EmergencyScreen> {
 
+  static List<Widget> dynamicWidgets = [];
+
   void showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -72,72 +74,73 @@ class _emergencyFeature extends State<EmergencyScreen> {
                           Container(
                             height: screenHeight * 0.15,
                             child: ListView(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
-                                    ),
-                                    onPressed: () {
-                                      FlutterPhoneDirectCaller.callNumber('+94763088444');
-                                    },
-                                    child: ListTile(
-                                      leading: Icon(Icons.account_circle),
-                                      title: Text("BENERT"),
-                                      trailing: Icon(Icons.call),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
-                                    ),
-                                    onPressed: () {
-                                      FlutterPhoneDirectCaller.callNumber('+94763088444');
-                                    },
-                                    child: ListTile(
-                                      leading: Icon(Icons.account_circle),
-                                      title: Text("BENERT"),
-                                      trailing: Icon(Icons.call),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
-                                    ),
-                                    onPressed: () {
-                                      FlutterPhoneDirectCaller.callNumber('+94763088444');
-                                    },
-                                    child: ListTile(
-                                      leading: Icon(Icons.account_circle),
-                                      title: Text("BENERT"),
-                                      trailing: Icon(Icons.call),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
-                                    ),
-                                    onPressed: () {
-                                      FlutterPhoneDirectCaller.callNumber('+94763088444');
-                                    },
-                                    child: ListTile(
-                                      leading: Icon(Icons.account_circle),
-                                      title: Text("BENERT"),
-                                      trailing: Icon(Icons.call),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              children: dynamicWidgets,
+
+                                // Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: ElevatedButton(
+                              //     style: ElevatedButton.styleFrom(
+                              //       backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
+                              //     ),
+                              //     onPressed: () {
+                              //       FlutterPhoneDirectCaller.callNumber('+94763088444');
+                              //     },
+                              //     child: ListTile(
+                              //       leading: Icon(Icons.account_circle),
+                              //       title: Text("BENERT"),
+                              //       trailing: Icon(Icons.call),
+                              //     ),
+                              //   ),
+                              // ),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(8.0),
+                                //   child: ElevatedButton(
+                                //     style: ElevatedButton.styleFrom(
+                                //       backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
+                                //     ),
+                                //     onPressed: () {
+                                //       FlutterPhoneDirectCaller.callNumber('+94763088444');
+                                //     },
+                                //     child: ListTile(
+                                //       leading: Icon(Icons.account_circle),
+                                //       title: Text("BENERT"),
+                                //       trailing: Icon(Icons.call),
+                                //     ),
+                                //   ),
+                                // ),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(8.0),
+                                //   child: ElevatedButton(
+                                //     style: ElevatedButton.styleFrom(
+                                //       backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
+                                //     ),
+                                //     onPressed: () {
+                                //       FlutterPhoneDirectCaller.callNumber('+94763088444');
+                                //     },
+                                //     child: ListTile(
+                                //       leading: Icon(Icons.account_circle),
+                                //       title: Text("BENERT"),
+                                //       trailing: Icon(Icons.call),
+                                //     ),
+                                //   ),
+                                // ),
+                                // Padding(
+                                //   padding: const EdgeInsets.all(8.0),
+                                //   child: ElevatedButton(
+                                //     style: ElevatedButton.styleFrom(
+                                //       backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
+                                //     ),
+                                //     onPressed: () {
+                                //       FlutterPhoneDirectCaller.callNumber('+94763088444');
+                                //     },
+                                //     child: ListTile(
+                                //       leading: Icon(Icons.account_circle),
+                                //       title: Text("BENERT"),
+                                //       trailing: Icon(Icons.call),
+                                //     ),
+                                //   ),
+                                // ),
+
                             ),
                           )
                         ],
@@ -256,10 +259,30 @@ class _emergencyFeature extends State<EmergencyScreen> {
     return position;
   }
 
-
-
 }
 
-
-
+class EmergencyCantactListHandler {
+  static void addDynamicWidget(String name,String phone) {
+    _emergencyFeature.dynamicWidgets.add(
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          child: ElevatedButton(
+            style:ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
+            ) ,
+            onPressed: (){
+              FlutterPhoneDirectCaller.callNumber(phone);
+            },
+            child: ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text(name),
+              trailing: Icon(Icons.call),
+            ),
+          ),
+        ),
+      )
+    );
+  }
+}
 
