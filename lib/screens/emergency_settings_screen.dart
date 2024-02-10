@@ -12,14 +12,50 @@ import 'package:projectblindcare/screens/emergency_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
 
 
+class EmergencySettingsScreen extends StatefulWidget {
+  const EmergencySettingsScreen({super.key});
+
+  @override
+  State<EmergencySettingsScreen> createState() => _EmergencySettingsScreenState();
+}
+
+
+Map<String, String> emgContacts = {};
+List<bool> conAddedList = List.filled(100, true);
+
+
+class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
+
+  List<Widget> conIcon = [
+    Icon(
+      Icons.add,
+      color: Colors.green,
+    ),
+    Icon(
+      Icons.emergency,
+      color: Colors.red,
+    )
+  ];
+
+  bool conAdded = true;
 
 
 
-class EmergencySettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    Widget statusIcon;
+
+    if(conAdded == true){
+      statusIcon = conIcon.first;
+    }else{
+      statusIcon = conIcon.last;
+    }
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+
 
 
     return Scaffold(
@@ -63,6 +99,7 @@ class EmergencySettingsScreen extends StatelessWidget {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 Contact contact = snapshot.data[index];
+                bool conAdded = conAddedList[index];
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Container(
@@ -73,43 +110,57 @@ class EmergencySettingsScreen extends StatelessWidget {
                     child: ListTile(
                       title: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children:<Widget> [
-                            Row(
 
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                  child: Icon(Icons.account_circle),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.account_circle),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text(contact.displayName),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                  child: Text(contact.displayName),
-                                ),
+                                Divider(),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Icon(Icons.phone),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
+                                      child: Text(contact.phones[0].number),
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
-                            Divider(),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                  child: Icon(Icons.phone),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0,top: 0,right: 8.0,bottom: 0),
-                                  child: Text(contact.phones[0].number),
-                                ),
-                              ],
-                            )
+                            IconButton(
+                              onPressed: () {
+                                EmergencyCantactListHandler.addDynamicWidget(contact.displayName, contact.phones[0].number);
+
+                                setState(() {
+                                  conAddedList[index] = false;
+                                });
+
+                                emgContacts[contact.displayName] = contact.phones[0].number;
+                                // print(index);
+
+                              },
+                              icon: conAdded ? conIcon.first : conIcon.last,
+                              color: Colors.red,
+                            ),
                           ],
                         ),
-                      ),
-                      trailing:  IconButton(
-                        icon: Icon(Icons.emergency),
-                        color: Colors.red,
-                        onPressed: (){
-                          EmergencyCantactListHandler.addDynamicWidget(contact.displayName,contact.phones[0].number);
-                        },
                       ),
                     ),
                   ),
@@ -120,8 +171,7 @@ class EmergencySettingsScreen extends StatelessWidget {
         },
       ),
     );
-  }
-
+}
 
   Future openDialogBox(BuildContext context) => showDialog(
       context: context,
@@ -169,8 +219,6 @@ class EmergencySettingsScreen extends StatelessWidget {
     }
     return [];
   }
-
-
 
 }
 
