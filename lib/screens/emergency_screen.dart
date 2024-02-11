@@ -1,11 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
+import 'package:flutter/services.dart' as rootBundle;
 
 
 
@@ -25,7 +30,11 @@ class EmergencyScreen extends StatefulWidget {
   _emergencyFeature createState() => _emergencyFeature();
 }
 
+bool contactLoaded = false;
+
+
 class _emergencyFeature extends State<EmergencyScreen> {
+
 
   static List<Widget> dynamicWidgets = [];
 
@@ -144,6 +153,23 @@ class _emergencyFeature extends State<EmergencyScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
 
+
+
+
+          if(contactLoaded == false){
+            EmergencyCantactListHandler handler = EmergencyCantactListHandler();
+            // Load contacts
+            List<ContactDataModel> contacts = await handler.loadContacts();
+
+            // Do something with the loaded contacts
+            for (ContactDataModel contact in contacts) {
+              print('Name: ${contact.name}, Phone: ${contact.phoneNumber}');
+              EmergencyCantactListHandler.addDynamicWidget('${contact.name}', '${contact.phoneNumber}');
+            }
+
+            contactLoaded = true;
+          }
+
           showBottomSheet(context);
 
 
@@ -193,6 +219,8 @@ class _emergencyFeature extends State<EmergencyScreen> {
     return position;
   }
 
+
+
 }
 
 class EmergencyCantactListHandler {
@@ -217,6 +245,113 @@ class EmergencyCantactListHandler {
         ),
       )
     );
+  }
+
+  // static void readJsonData() async {
+  //   final jsonData =  await rootBundle.rootBundle.loadString('contactStorage/EmergencyContactStorage.json');
+  //   final list = json.decode(jsonData) as List<dynamic>;
+  //
+  //   List<ContactDataModel> contactList = list.map((e) => ContactDataModel.fromJson(e)).toList();
+  //
+  //   print(list.length);
+  //
+  //   for (var contact in contactList) {
+  //     EmergencyCantactListHandler.addDynamicWidget("${contact.name}", "${contact.phoneNumber}");
+  //   }
+  // }
+
+  static void addContact(ContactDataModel newContact) async {
+    // Get the documents directory
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
+    // Specify the file path within the documents directory
+    String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
+
+    try {
+      // Check if the file exists, create it if not
+      File file = File(filePath);
+      if (!file.existsSync()) {
+        file.createSync();
+      }
+
+      // Read existing JSON data from the file
+      String existingData = file.readAsStringSync();
+
+      // Parse JSON data into a List<dynamic>
+      List<dynamic> existingList = (existingData.isNotEmpty)
+          ? jsonDecode(existingData)
+          : <dynamic>[];
+
+      // Add the new contact to the list
+      existingList.add(newContact.toJson());
+
+
+      // existingList.clear();
+
+      // Convert the updated list back to JSON
+      String updatedData = jsonEncode(existingList);
+
+      // Write the updated JSON data back to the file
+      file.writeAsStringSync(updatedData);
+
+      print('Contact added successfully.');
+
+      String contentAfterWrite = file.readAsStringSync();
+      print('😇 Content after write: $contentAfterWrite');
+    } catch (e) {
+      print('😘 Error adding contact: $e');
+    }
+  }
+
+  Future<List<ContactDataModel>> loadContacts() async {
+    // Get the documents directory
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
+    // Specify the file path within the documents directory
+    String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
+
+    try {
+      // Read existing JSON data from the file
+      String existingData = File(filePath).readAsStringSync();
+
+      // Parse JSON data into a List<ContactDataModel>
+      List<dynamic> existingList = (existingData.isNotEmpty)
+          ? jsonDecode(existingData)
+          : <dynamic>[];
+
+      List<ContactDataModel> contacts = existingList
+          .map((contactJson) => ContactDataModel.fromJson(contactJson))
+          .toList();
+
+      return contacts;
+    } catch (e) {
+      print('😘 Error loading contacts: $e');
+      return <ContactDataModel>[]; // Return an empty list in case of an error
+    }
+  }
+
+}
+
+class ContactDataModel{
+  String? name;
+  String? phoneNumber;
+
+  ContactDataModel(
+      {
+        this.name,
+        this.phoneNumber
+      });
+
+  ContactDataModel.fromJson(Map<String,dynamic> json){
+    name = json['name'];
+    phoneNumber = json['phoneNumber'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'phoneNumber': phoneNumber,
+    };
   }
 }
 

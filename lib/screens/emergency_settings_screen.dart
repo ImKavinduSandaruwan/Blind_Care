@@ -21,7 +21,7 @@ class EmergencySettingsScreen extends StatefulWidget {
 
 
 Map<String, String> emgContacts = {};
-List<bool> conAddedList = List.filled(100, true);
+List<bool> conAddedList = List.filled(1000, true);
 
 
 class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
@@ -50,6 +50,10 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
       statusIcon = conIcon.first;
     }else{
       statusIcon = conIcon.last;
+    }
+
+    for(int i=0;i<conAddedList.length;i++){
+
     }
 
     double screenWidth = MediaQuery.of(context).size.width;
@@ -147,6 +151,8 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
                             IconButton(
                               onPressed: () {
                                 EmergencyCantactListHandler.addDynamicWidget(contact.displayName, contact.phones[0].number);
+                                ContactDataModel newContact = ContactDataModel(name: '${contact.displayName}', phoneNumber: '${contact.phones[0].number}');
+                                EmergencyCantactListHandler.addContact(newContact);
 
                                 setState(() {
                                   conAddedList[index] = false;

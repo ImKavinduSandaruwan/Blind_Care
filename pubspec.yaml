@@ -33,6 +33,7 @@ flutter:
   uses-material-design: true
   assets:
     - images/
+    - contactStorage/
 
   fonts:
     - family: Poppins
