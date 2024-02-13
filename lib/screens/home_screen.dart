@@ -7,6 +7,7 @@ import 'package:projectblindcare/components/reuseble_FunctionCard.dart';
 
 import 'customer_support.dart';
 import 'emergency_screen.dart';
+import 'log_reg_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -156,6 +157,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(top: 30.0,right: 20.0),
+        child: FloatingActionButton(
+          onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => log_reg())); },
+          child: Icon(Icons.account_circle),
+          backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
+        
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+
     );
   }
 }
