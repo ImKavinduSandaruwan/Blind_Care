@@ -108,6 +108,8 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color(0xffF2FEFE),
       bottomNavigationBar: CurvedNavigationBar(
@@ -150,43 +152,46 @@ class _emergencyFeature extends State<EmergencyScreen> {
         mapType: MapType.normal, onMapCreated: (GoogleMapController controller){
         googleMapController = controller;
       },),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
+      floatingActionButton: Container(
+        width: screenWidth*0.9,
+        height: screenHeight*0.1,
+        margin: EdgeInsets.only(bottom: 100.0),
+        child: FloatingActionButton.extended(
+          onPressed: () async {
 
+            if(contactLoaded == false){
+              EmergencyCantactListHandler handler = EmergencyCantactListHandler();
+              // Load contacts
+              List<ContactDataModel> contacts = await handler.loadContacts();
 
+              // Do something with the loaded contacts
+              for (ContactDataModel contact in contacts) {
+                print('Name: ${contact.name}, Phone: ${contact.phoneNumber}');
+                EmergencyCantactListHandler.addDynamicWidget('${contact.name}', '${contact.phoneNumber}');
+              }
 
-
-          if(contactLoaded == false){
-            EmergencyCantactListHandler handler = EmergencyCantactListHandler();
-            // Load contacts
-            List<ContactDataModel> contacts = await handler.loadContacts();
-
-            // Do something with the loaded contacts
-            for (ContactDataModel contact in contacts) {
-              print('Name: ${contact.name}, Phone: ${contact.phoneNumber}');
-              EmergencyCantactListHandler.addDynamicWidget('${contact.name}', '${contact.phoneNumber}');
+              contactLoaded = true;
             }
 
-            contactLoaded = true;
-          }
-
-          showBottomSheet(context);
+            showBottomSheet(context);
 
 
-          Position position = await _determinePosition();
+            Position position = await _determinePosition();
 
-          googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude,position.longitude),zoom: 14)));
+            googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude,position.longitude),zoom: 14)));
 
-          markers.clear();
+            markers.clear();
 
-          markers.add(Marker(markerId: const MarkerId("currentLocation"),position: LatLng(position.latitude,position.longitude)));
+            markers.add(Marker(markerId: const MarkerId("currentLocation"),position: LatLng(position.latitude,position.longitude)));
 
-          setState(() {});
+            setState(() {});
 
-        },
-        backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
-        label: Text("Enable Emergency Situation"),
+          },
+          backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
+          label: Text("Enable Emergency Situation"),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
