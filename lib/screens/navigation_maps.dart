@@ -65,7 +65,8 @@ class _LocationMapState extends State<LocationMap> {
                   border: OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.search),
-                    onPressed: _searchDestination,
+                    onPressed: (){},
+                    // onPressed: _searchDestination,
                   )
                 ),
               )

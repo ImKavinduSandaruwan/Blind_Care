@@ -10,7 +10,6 @@ import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
-import 'package:flutter/services.dart' as rootBundle;
 
 
 

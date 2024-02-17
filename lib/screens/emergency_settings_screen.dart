@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:projectblindcare/screens/emergency_screen.dart';
-import 'package:projectblindcare/screens/home_screen.dart';
 
 
 class EmergencySettingsScreen extends StatefulWidget {
@@ -178,7 +177,7 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(153, 255, 153, 1.0)),
                   ),
-                  child: Text("ADD"),
+                  child: Text("ADD",style: TextStyle(color: Colors.black,fontSize: 30,fontFamily:'Arial',fontWeight: FontWeight.bold)),
                 ),
               )
             ],
