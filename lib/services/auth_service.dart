@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthService{
 
   signWithGoogleAccount() async {
+    ///This will pop up google sign in window to the user.
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     ///Getting authentication details

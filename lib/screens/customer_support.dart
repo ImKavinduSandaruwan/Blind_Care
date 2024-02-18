@@ -14,13 +14,6 @@ class CustomerService extends StatefulWidget {
 
 class _CustomerServiceState extends State<CustomerService> {
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  void google() {
-    print("google");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,9 +71,12 @@ class _CustomerServiceState extends State<CustomerService> {
                     ),
                   ),
                   const SizedBox(height: 20,),
+
+                  ///Google and Apple sign in Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      ///Google Button
                       Expanded(
                         child: SquareTile(
                           imagePath: "images/google.png",
@@ -91,10 +87,11 @@ class _CustomerServiceState extends State<CustomerService> {
                       ),
                       const SizedBox(width: 20,),
                       ///Apple Button
+                      //TODO : Need to implement Apple sign in function
                       Expanded(
                         child: SquareTile(
                           imagePath: "images/apple.png",
-                          onTap: google,
+                          onTap: (){},
                         ),
                       ),
                     ],
