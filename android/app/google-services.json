@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1057970162204",
+    "project_id": "blind-care-bcae7",
+    "storage_bucket": "blind-care-bcae7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057970162204:android:7251296b43f2c2bb8f2dd9",
+        "android_client_info": {
+          "package_name": "com.example.projectblindcare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAethiSGSghX5UebTo-DNImbCBIno083bs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
