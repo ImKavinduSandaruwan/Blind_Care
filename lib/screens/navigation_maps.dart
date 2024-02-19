@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 void main(){
@@ -29,7 +33,9 @@ class _LocationMapState extends State<LocationMap> {
   GoogleMapController? mapController;
   final TextEditingController _destinationController = TextEditingController();
   Set<Marker> markers = {};
+
   Position? currentPosition;
+
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
   DetailsResult? endPosition;
@@ -40,7 +46,7 @@ class _LocationMapState extends State<LocationMap> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String apiKey = "";
+  String apiKey = "AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo";
 
   @override
   void initState() {
@@ -48,7 +54,7 @@ class _LocationMapState extends State<LocationMap> {
     apiKey = 'AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo';
     googlePlace = GooglePlace(apiKey);
 
-    _getCurrentLocation();
+    _requestLocationPermission();
 
     endFocusNode = FocusNode();
   }
@@ -64,7 +70,7 @@ class _LocationMapState extends State<LocationMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Navigation'),
+        title: const Text('Navigation'),
       ),
       body: Stack(
         children: [
@@ -74,8 +80,8 @@ class _LocationMapState extends State<LocationMap> {
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  currentPosition!.latitude,
-                  currentPosition!.longitude,
+                  currentPosition!.latitude ?? 0.0,
+                  currentPosition!.longitude ?? 0.0,
                 ),
                 zoom: 15.0,
               ),
@@ -97,7 +103,7 @@ class _LocationMapState extends State<LocationMap> {
                     hintText: 'Enter Destination',
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.9),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: _destinationController.text.isNotEmpty
                         ? IconButton(
                             onPressed: (){
@@ -162,6 +168,7 @@ class _LocationMapState extends State<LocationMap> {
                 ),
                   child: TextButton(
                     onPressed: () {
+                      _requestLocationPermission();
                       _setDestination();
                       _getPolyline();
                     },
@@ -214,6 +221,30 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
+  Future<void> _requestLocationPermission() async {
+    final status = await Permission.locationWhenInUse.request();
+    if (status == PermissionStatus.granted) {
+      _getCurrentLocation();
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      openAppSettings();
+    } else {
+      print('error');
+    }
+  }
+
+  void openAppSettings() async {
+    // Use the appropriate URI/intent based on the platform (Android/iOS)
+    final url = Platform.isAndroid
+        ? 'package:com.android.settings'
+        : 'app-settings://';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(url as Uri);
+    } else {
+      // Handle the case where the URL cannot be launched
+      print('Could not launch app settings');
+    }
+  }
+
   void _setDestination() async {
     s1 = currentPosition?.latitude;
     s2 = currentPosition?.longitude;
@@ -236,8 +267,10 @@ class _LocationMapState extends State<LocationMap> {
       sw2 = s2;
     }
     mapController!.animateCamera(CameraUpdate.newLatLngBounds(
-        LatLngBounds(southwest: LatLng(sw1!-0.1,sw2!-0.1), northeast: LatLng(ne1!+0.1,ne2!+0.1)),
-      1
+        LatLngBounds(
+            southwest: LatLng(sw1!-0.1,sw2!-0.1),
+            northeast: LatLng(ne1!+0.1,ne2!+0.1)),
+        1
     ));
     markers.remove('End');
     setState(() {
@@ -256,7 +289,7 @@ class _LocationMapState extends State<LocationMap> {
   _addPolyLine() {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
-        polylineId: id, color: Colors.red, points: polylineCoordinates, width: 3);
+        polylineId: id, color: Colors.red, points: polylineCoordinates);
     polylines[id] = polyline;
     setState(() {});
   }
