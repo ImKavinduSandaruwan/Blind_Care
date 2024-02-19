@@ -11,10 +11,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  flutter_svg_provider: ^1.0.7
+  flutter_svg_provider: ^1.0.4
   curved_navigation_bar: ^1.0.3
   camera: ^0.10.5+9
-#  url_launcher: ^6.0.12
   flutter_phone_direct_caller: ^2.1.1
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
@@ -27,6 +26,8 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_auth: ^4.17.4
   google_sign_in_ios: ^5.7.4
+  google_place: ^0.4.7
+  flutter_polyline_points: ^1.0.0
 
 dev_dependencies:
   flutter_test:
