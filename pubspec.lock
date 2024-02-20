@@ -176,7 +176,11 @@ packages:
       sha256: "493f37e7df1804778ff3a53bd691d8692ddf69702cf4c1c1096a2e41b4779e21"
       url: "https://pub.dev"
     source: hosted
+<<<<<<< Updated upstream
     version: "2.1.2"
+=======
+    version: "2.1.0"
+>>>>>>> Stashed changes
   file:
     dependency: transitive
     description:
@@ -185,6 +189,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+<<<<<<< Updated upstream
   firebase_auth:
     dependency: "direct main"
     description:
@@ -233,6 +238,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.4"
+=======
+>>>>>>> Stashed changes
   fixnum:
     dependency: transitive
     description:

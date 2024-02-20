@@ -23,12 +23,17 @@ dependencies:
   url_launcher: ^6.2.4
   permission_handler: ^11.2.0
   path_provider: ^2.1.2
+<<<<<<< Updated upstream
   firebase_core: ^2.25.4
   google_sign_in: ^6.2.1
   firebase_auth: ^4.17.4
   google_sign_in_ios: ^5.7.4
   cloud_firestore: ^4.15.4
   shared_preferences: ^2.2.2
+=======
+  shared_preferences: ^2.2.2
+
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:

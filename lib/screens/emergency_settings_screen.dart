@@ -24,6 +24,8 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
   Map<String, String> emgContactBoxDetails = {};
 
+  static Map<String, String> contactMap = {};
+
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
@@ -68,6 +70,14 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
                 nameController.clear();
                 phoneNumberController.clear();
+<<<<<<< Updated upstream
+=======
+                Navigator.of(context).pop();
+
+                // contactMap["${nameController}"] = "${phoneNumberController}";
+
+                // EmergencyCantactListHandler.saveMap("user", contactMap);
+>>>>>>> Stashed changes
 
                 setState(() {
                   addedContacts;
@@ -184,7 +194,22 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
               ),
 
               Container(
-                margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                height: 60.0,
+                width: screenWidth * 0.9,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _showDialog(context);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(255, 10, 10, 0.7)),
+                  ),
+                  child: Text("Delete all",style: TextStyle(color: Colors.black,fontSize: 30,fontFamily:'Arial',fontWeight: FontWeight.bold)),
+                ),
+              ),
+
+              Container(
+                margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
                 height: 60.0,
                 width: screenWidth * 0.9,
                 child: ElevatedButton(

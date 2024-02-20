@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,6 +15,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 import '../main.dart';
 
@@ -142,7 +149,7 @@ class _emergencyFeature extends State<EmergencyScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.settings),
-            onPressed: () {
+            onPressed: () async {
               Navigator.push(context, MaterialPageRoute(builder: (context) => EmergencySettingsScreen()));
               print('Settings button pressed');
             },
@@ -164,6 +171,26 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
           onPressed: () async {
 
+<<<<<<< Updated upstream
+=======
+
+
+
+            // if(contactLoaded == false){
+            //   EmergencyCantactListHandler handler = EmergencyCantactListHandler();
+            //   // Load contacts
+            //   List<ContactDataModel> contacts = await handler.loadContacts();
+            //
+            //   // Do something with the loaded contacts
+            //   for (ContactDataModel contact in contacts) {
+            //     print('Name: ${contact.name}, Phone: ${contact.phoneNumber}');
+            //     EmergencyCantactListHandler.addDynamicWidget('${contact.name}', '${contact.phoneNumber}');
+            //   }
+            //
+            //   contactLoaded = true;
+            // }
+
+>>>>>>> Stashed changes
             showBottomSheet(context);
 
             Position position = await _determinePosition();
@@ -175,6 +202,8 @@ class _emergencyFeature extends State<EmergencyScreen> {
             markers.add(Marker(markerId: const MarkerId("currentLocation"),position: LatLng(position.latitude,position.longitude)));
 
             setState(() {});
+
+
 
           },
           backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
@@ -218,8 +247,11 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
 class EmergencyCantactListHandler {
 
+<<<<<<< Updated upstream
   late Map<String, dynamic> myMap;
 
+=======
+>>>>>>> Stashed changes
   static void addDynamicWidget(String name,String phone) {
     _emergencyFeature.dynamicWidgets.add(
       Padding(
@@ -243,9 +275,35 @@ class EmergencyCantactListHandler {
     );
   }
 
+<<<<<<< Updated upstream
   // static void addContact(ContactDataModel newContact) async {
   //   // Get the documents directory
   //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
+=======
+  static Future<void> saveMap(String key, Map map) async {
+    final prefs = await SharedPreferences.getInstance();
+    // Convert the map to a JSON string before storing
+    prefs.setString(key, json.encode(map));
+  }
+
+  static Future<Map<String, dynamic>?> loadMap(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(key);
+    // Convert the JSON string back to a map
+    return jsonString != null ? json.decode(jsonString) : null;
+  }
+
+
+
+
+
+
+
+
+  // static void readJsonData() async {
+  //   final jsonData =  await rootBundle.rootBundle.loadString('contactStorage/EmergencyContactStorage.json');
+  //   final list = json.decode(jsonData) as List<dynamic>;
+>>>>>>> Stashed changes
   //
   //   // Specify the file path within the documents directory
   //   String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
@@ -286,6 +344,53 @@ class EmergencyCantactListHandler {
   //   }
   // }
 
+<<<<<<< Updated upstream
+=======
+  // static void addContact(ContactDataModel newContact) async {
+  //   // Get the documents directory
+  //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
+  //
+  //   // Specify the file path within the documents directory
+  //   String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
+  //
+  //   try {
+  //     // Check if the file exists, create it if not
+  //     File file = File(filePath);
+  //     if (!file.existsSync()) {
+  //       file.createSync();
+  //     }
+  //
+  //     // Read existing JSON data from the file
+  //     String existingData = file.readAsStringSync();
+  //
+  //     // Parse JSON data into a List<dynamic>
+  //     List<dynamic> existingList = (existingData.isNotEmpty)
+  //         ? jsonDecode(existingData)
+  //         : <dynamic>[];
+  //
+  //     // Add the new contact to the list
+  //     existingList.add(newContact.toJson());
+  //
+  //
+  //     // existingList.clear();
+  //
+  //     // Convert the updated list back to JSON
+  //     String updatedData = jsonEncode(existingList);
+  //
+  //     // Write the updated JSON data back to the file
+  //     file.writeAsStringSync(updatedData);
+  //
+  //     print("🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱 ${existingList[0][0]}");
+  //     print('Contact added successfully.');
+  //
+  //     String contentAfterWrite = file.readAsStringSync();
+  //     print('😇 Content after write: $contentAfterWrite');
+  //   } catch (e) {
+  //     print('😘 Error adding contact: $e');
+  //   }
+  // }
+
+>>>>>>> Stashed changes
   // Future<List<ContactDataModel>> loadContacts() async {
   //   // Get the documents directory
   //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
