@@ -176,11 +176,7 @@ packages:
       sha256: "493f37e7df1804778ff3a53bd691d8692ddf69702cf4c1c1096a2e41b4779e21"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< Updated upstream
     version: "2.1.2"
-=======
-    version: "2.1.0"
->>>>>>> Stashed changes
   file:
     dependency: transitive
     description:
@@ -189,7 +185,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-<<<<<<< Updated upstream
   firebase_auth:
     dependency: "direct main"
     description:
@@ -238,8 +233,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.4"
-=======
->>>>>>> Stashed changes
   fixnum:
     dependency: transitive
     description:
@@ -277,14 +270,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
-  flutter_polyline_points:
-    dependency: "direct main"
-    description:
-      name: flutter_polyline_points
-      sha256: "02699e69142f51a248d784b6e3eec524194467fca5f7c4da19699ce2368b6980"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter_svg:
     dependency: transitive
     description:
@@ -297,10 +282,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg_provider
-      sha256: aad5ab28feb23280962820a4b5db4404777c597f62349b3467b4813974a1cb99
+      sha256: cda47ab350671ba51ae4605d48f4c82fa5a2c399d22ebda367c1b407234c5048
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.7"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -487,14 +472,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.3+2"
-  google_place:
-    dependency: "direct main"
-    description:
-      name: google_place
-      sha256: "71538407e63f194a5a10d4747c934d26bfc4328c5ee571ffe25ae70a917f2cdc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.7"
   html:
     dependency: transitive
     description:
@@ -507,10 +484,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      sha256: a2bbf9d017fcced29139daa8ed2bba4ece450ab222871df93ca9eec6f80c34ba
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.6"
+    version: "1.2.0"
   http_parser:
     dependency: transitive
     description:
