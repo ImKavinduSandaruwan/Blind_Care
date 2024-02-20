@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projectblindcare/screens/emergency_screen.dart';
+import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -15,10 +17,19 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  List<Person> allPeople = await Person.loadPeople();
+  allPeople.forEach((person) {
+    print('Name: ${person.name}, Phone Number: ${person.phoneNumber}');
+    EmergencyCantactListHandler.addDynamicWidget('${person.name}', '${person.phoneNumber}');
+    EmergencySettingsScreenState.addedSavedContact('${person.name}','${person.phoneNumber}');
+  });
+
   runApp(const BlindCareApp());
 }
 
 class BlindCareApp extends StatelessWidget {
+
   const BlindCareApp({super.key});
 
   @override

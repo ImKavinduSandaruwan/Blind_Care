@@ -1,27 +1,33 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:projectblindcare/screens/emergency_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class EmergencySettingsScreen extends StatefulWidget {
   const EmergencySettingsScreen({super.key});
 
   @override
-  State<EmergencySettingsScreen> createState() => _EmergencySettingsScreenState();
+  State<EmergencySettingsScreen> createState() => EmergencySettingsScreenState();
 }
 
 
 
-class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
+class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
-  List<Widget> addedContacts = [];
+  static List<Widget> addedContacts = [];
+
+  Map<String, String> emgContactBoxDetails = {};
 
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
+  bool emgContactBoxDetailsUpdated = true;
 
   void _showDialog(BuildContext context) {
     showDialog(
@@ -49,12 +55,20 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 EmergencyCantactListHandler.addDynamicWidget(nameController.text, phoneNumberController.text);
-                _addedSavedContact(nameController.text,phoneNumberController.text);
+                addedSavedContact(nameController.text,phoneNumberController.text);
+
+                Navigator.of(context).pop();
+
+                emgContactBoxDetails['${nameController.text}'] = phoneNumberController.text;
+
+                Person newPerson = Person(name: '${nameController.text}', phoneNumber: '${phoneNumberController.text}');
+                await Person.savePerson(newPerson);
+
                 nameController.clear();
                 phoneNumberController.clear();
-                Navigator.of(context).pop();
+
                 setState(() {
                   addedContacts;
                 });
@@ -67,7 +81,7 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
     );
   }
 
-  void _addedSavedContact(String name, String phone){
+  static void addedSavedContact(String name, String phone){
     addedContacts.add(
         Container(
           margin: EdgeInsets.only(top: 10.0),
@@ -115,8 +129,11 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
                   ],
                 ),
                 IconButton(
-                    onPressed: (){},
-                    icon: Icon(Icons.delete)
+                    onPressed: () {},
+                    icon: Icon(
+                        Icons.delete,
+                      color: Colors.red,
+                    )
                 )
               ],
             ),
@@ -126,9 +143,9 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -187,3 +204,5 @@ class _EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
     );
   }
 }
+
+

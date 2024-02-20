@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -10,8 +11,9 @@ import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
+import '../main.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -30,7 +32,6 @@ class EmergencyScreen extends StatefulWidget {
 }
 
 bool contactLoaded = false;
-
 
 class _emergencyFeature extends State<EmergencyScreen> {
 
@@ -105,8 +106,11 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
   Set<Marker> markers = {};
 
+
+
   @override
   Widget build(BuildContext context) {
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -132,6 +136,7 @@ class _emergencyFeature extends State<EmergencyScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+
           },
         ),
         actions: [
@@ -156,24 +161,10 @@ class _emergencyFeature extends State<EmergencyScreen> {
         height: screenHeight*0.1,
         margin: EdgeInsets.only(bottom: 100.0),
         child: FloatingActionButton.extended(
+
           onPressed: () async {
 
-            if(contactLoaded == false){
-              EmergencyCantactListHandler handler = EmergencyCantactListHandler();
-              // Load contacts
-              List<ContactDataModel> contacts = await handler.loadContacts();
-
-              // Do something with the loaded contacts
-              for (ContactDataModel contact in contacts) {
-                print('Name: ${contact.name}, Phone: ${contact.phoneNumber}');
-                EmergencyCantactListHandler.addDynamicWidget('${contact.name}', '${contact.phoneNumber}');
-              }
-
-              contactLoaded = true;
-            }
-
             showBottomSheet(context);
-
 
             Position position = await _determinePosition();
 
@@ -223,11 +214,12 @@ class _emergencyFeature extends State<EmergencyScreen> {
     return position;
   }
 
-
-
 }
 
 class EmergencyCantactListHandler {
+
+  late Map<String, dynamic> myMap;
+
   static void addDynamicWidget(String name,String phone) {
     _emergencyFeature.dynamicWidgets.add(
       Padding(
@@ -251,88 +243,75 @@ class EmergencyCantactListHandler {
     );
   }
 
-  // static void readJsonData() async {
-  //   final jsonData =  await rootBundle.rootBundle.loadString('contactStorage/EmergencyContactStorage.json');
-  //   final list = json.decode(jsonData) as List<dynamic>;
+  // static void addContact(ContactDataModel newContact) async {
+  //   // Get the documents directory
+  //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
   //
-  //   List<ContactDataModel> contactList = list.map((e) => ContactDataModel.fromJson(e)).toList();
+  //   // Specify the file path within the documents directory
+  //   String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
   //
-  //   print(list.length);
+  //   try {
+  //     // Check if the file exists, create it if not
+  //     File file = File(filePath);
+  //     if (!file.existsSync()) {
+  //       file.createSync();
+  //     }
   //
-  //   for (var contact in contactList) {
-  //     EmergencyCantactListHandler.addDynamicWidget("${contact.name}", "${contact.phoneNumber}");
+  //     // Read existing JSON data from the file
+  //     String existingData = file.readAsStringSync();
+  //
+  //     // Parse JSON data into a List<dynamic>
+  //     List<dynamic> existingList = (existingData.isNotEmpty)
+  //         ? jsonDecode(existingData)
+  //         : <dynamic>[];
+  //
+  //     // Add the new contact to the list
+  //     existingList.add(newContact.toJson());
+  //
+  //
+  //     // existingList.clear();
+  //
+  //     // Convert the updated list back to JSON
+  //     String updatedData = jsonEncode(existingList);
+  //
+  //     // Write the updated JSON data back to the file
+  //     file.writeAsStringSync(updatedData);
+  //
+  //     print('Contact added successfully.');
+  //
+  //     String contentAfterWrite = file.readAsStringSync();
+  //     print('😇 Content after write: $contentAfterWrite');
+  //   } catch (e) {
+  //     print('😘 Error adding contact: $e');
   //   }
   // }
 
-  static void addContact(ContactDataModel newContact) async {
-    // Get the documents directory
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-    // Specify the file path within the documents directory
-    String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
-
-    try {
-      // Check if the file exists, create it if not
-      File file = File(filePath);
-      if (!file.existsSync()) {
-        file.createSync();
-      }
-
-      // Read existing JSON data from the file
-      String existingData = file.readAsStringSync();
-
-      // Parse JSON data into a List<dynamic>
-      List<dynamic> existingList = (existingData.isNotEmpty)
-          ? jsonDecode(existingData)
-          : <dynamic>[];
-
-      // Add the new contact to the list
-      existingList.add(newContact.toJson());
-
-
-      // existingList.clear();
-
-      // Convert the updated list back to JSON
-      String updatedData = jsonEncode(existingList);
-
-      // Write the updated JSON data back to the file
-      file.writeAsStringSync(updatedData);
-
-      print('Contact added successfully.');
-
-      String contentAfterWrite = file.readAsStringSync();
-      print('😇 Content after write: $contentAfterWrite');
-    } catch (e) {
-      print('😘 Error adding contact: $e');
-    }
-  }
-
-  Future<List<ContactDataModel>> loadContacts() async {
-    // Get the documents directory
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-    // Specify the file path within the documents directory
-    String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
-
-    try {
-      // Read existing JSON data from the file
-      String existingData = File(filePath).readAsStringSync();
-
-      // Parse JSON data into a List<ContactDataModel>
-      List<dynamic> existingList = (existingData.isNotEmpty)
-          ? jsonDecode(existingData)
-          : <dynamic>[];
-
-      List<ContactDataModel> contacts = existingList
-          .map((contactJson) => ContactDataModel.fromJson(contactJson))
-          .toList();
-
-      return contacts;
-    } catch (e) {
-      print('😘 Error loading contacts: $e');
-      return <ContactDataModel>[]; // Return an empty list in case of an error
-    }
-  }
+  // Future<List<ContactDataModel>> loadContacts() async {
+  //   // Get the documents directory
+  //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
+  //
+  //   // Specify the file path within the documents directory
+  //   String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
+  //
+  //   try {
+  //     // Read existing JSON data from the file
+  //     String existingData = File(filePath).readAsStringSync();
+  //
+  //     // Parse JSON data into a List<ContactDataModel>
+  //     List<dynamic> existingList = (existingData.isNotEmpty)
+  //         ? jsonDecode(existingData)
+  //         : <dynamic>[];
+  //
+  //     List<ContactDataModel> contacts = existingList
+  //         .map((contactJson) => ContactDataModel.fromJson(contactJson))
+  //         .toList();
+  //
+  //     return contacts;
+  //   } catch (e) {
+  //     print('😘 Error loading contacts: $e');
+  //     return <ContactDataModel>[]; // Return an empty list in case of an error
+  //   }
+  // }
 
 }
 
@@ -357,5 +336,54 @@ class ContactDataModel{
       'phoneNumber': phoneNumber,
     };
   }
+}
+
+
+class Person {
+  String name;
+  String phoneNumber;
+
+  Person({required this.name, required this.phoneNumber});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'phoneNumber': phoneNumber,
+    };
+  }
+
+  factory Person.fromMap(Map<String, dynamic> map) {
+    return Person(
+      name: map['name'],
+      phoneNumber: map['phoneNumber'],
+    );
+  }
+
+  static Future<void> savePerson(Person person) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> peopleData = prefs.getStringList('people') ?? [];
+
+    // Convert the Person object to a map and add it to the list
+    peopleData.add(json.encode(person.toMap()));
+
+    // Save the updated list to SharedPreferences
+    prefs.setStringList('people', peopleData);
+  }
+
+
+  static Future<List<Person>> loadPeople() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> peopleData = prefs.getStringList('people') ?? [];
+
+    // Convert each JSON string back to a map and then to a Person object
+    List<Person> people = peopleData.map((jsonString) {
+      Map<String, dynamic> map = json.decode(jsonString);
+      return Person.fromMap(map);
+    }).toList();
+
+    return people;
+  }
+
+
 }
 
