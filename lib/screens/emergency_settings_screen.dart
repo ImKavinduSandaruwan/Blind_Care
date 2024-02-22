@@ -70,14 +70,13 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
                 nameController.clear();
                 phoneNumberController.clear();
-<<<<<<< Updated upstream
-=======
+
                 Navigator.of(context).pop();
 
                 // contactMap["${nameController}"] = "${phoneNumberController}";
 
                 // EmergencyCantactListHandler.saveMap("user", contactMap);
->>>>>>> Stashed changes
+
 
                 setState(() {
                   addedContacts;
@@ -204,7 +203,7 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(255, 10, 10, 0.7)),
                   ),
-                  child: Text("Delete all",style: TextStyle(color: Colors.black,fontSize: 30,fontFamily:'Arial',fontWeight: FontWeight.bold)),
+                  child: Text("Delete",style: TextStyle(color: Colors.black,fontSize: 30,fontFamily:'Arial',fontWeight: FontWeight.bold)),
                 ),
               ),
 

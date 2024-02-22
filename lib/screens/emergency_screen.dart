@@ -15,10 +15,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 
 import '../main.dart';
 
@@ -171,8 +168,7 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
           onPressed: () async {
 
-<<<<<<< Updated upstream
-=======
+
 
 
 
@@ -190,7 +186,6 @@ class _emergencyFeature extends State<EmergencyScreen> {
             //   contactLoaded = true;
             // }
 
->>>>>>> Stashed changes
             showBottomSheet(context);
 
             Position position = await _determinePosition();
@@ -247,11 +242,9 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
 class EmergencyCantactListHandler {
 
-<<<<<<< Updated upstream
   late Map<String, dynamic> myMap;
 
-=======
->>>>>>> Stashed changes
+
   static void addDynamicWidget(String name,String phone) {
     _emergencyFeature.dynamicWidgets.add(
       Padding(
@@ -275,11 +268,7 @@ class EmergencyCantactListHandler {
     );
   }
 
-<<<<<<< Updated upstream
-  // static void addContact(ContactDataModel newContact) async {
-  //   // Get the documents directory
-  //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
-=======
+
   static Future<void> saveMap(String key, Map map) async {
     final prefs = await SharedPreferences.getInstance();
     // Convert the map to a JSON string before storing
@@ -303,7 +292,7 @@ class EmergencyCantactListHandler {
   // static void readJsonData() async {
   //   final jsonData =  await rootBundle.rootBundle.loadString('contactStorage/EmergencyContactStorage.json');
   //   final list = json.decode(jsonData) as List<dynamic>;
->>>>>>> Stashed changes
+
   //
   //   // Specify the file path within the documents directory
   //   String filePath = '${documentsDirectory.path}/EmergencyContactStorage.json';
@@ -344,8 +333,7 @@ class EmergencyCantactListHandler {
   //   }
   // }
 
-<<<<<<< Updated upstream
-=======
+
   // static void addContact(ContactDataModel newContact) async {
   //   // Get the documents directory
   //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -390,7 +378,7 @@ class EmergencyCantactListHandler {
   //   }
   // }
 
->>>>>>> Stashed changes
+
   // Future<List<ContactDataModel>> loadContacts() async {
   //   // Get the documents directory
   //   Directory documentsDirectory = await getApplicationDocumentsDirectory();
