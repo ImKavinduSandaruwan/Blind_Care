@@ -1,5 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:projectblindcare/components/camera_view.dart';
+import '../components/scan_controller.dart';
 import '../constants/constant.dart';
 import 'package:camera/camera.dart';
 
@@ -11,38 +15,6 @@ class ObjectDetection extends StatefulWidget {
 }
 
 class _ObjectDetectionState extends State<ObjectDetection> {
-
-  late CameraController controller;
-  late List<CameraDescription> _cameras;
-
-  Future<void> accessCamera() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    _cameras = await availableCameras();
-    controller = CameraController(_cameras[0], ResolutionPreset.high);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-          // Handle access errors here.
-            break;
-          default:
-          // Handle other errors here.
-            break;
-        }
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    accessCamera();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +50,20 @@ class _ObjectDetectionState extends State<ObjectDetection> {
                 width: 2
             )
         ),
-        width: screenWidth/2,
-        height: screenHeight/3,
-        child: CameraPreview(controller),
+        width: 400,
+        height: 400,
+        child: Column(
+          children: [
+            Container(
+                width: 200,
+                height: 200,
+                child: CameraView()),
+            Container(
+                width: 100,
+                height: 100,
+                child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))),
+          ],
+        ),
       ),
     );
   }

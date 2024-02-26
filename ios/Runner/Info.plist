@@ -16,6 +16,12 @@
             </array>
         </dict>
     </array>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs access to the microphone to convert text to speech.</string>
+
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>This app needs access to the speech recognition to convert text to speech.</string>
+
     <key>NSContactsUsageDescription</key>
     <string>Description of why you need the contacts permission.</string>
     <key>NSCameraUsageDescription</key>

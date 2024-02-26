@@ -29,6 +29,10 @@ dependencies:
   google_sign_in_ios: ^5.7.4
   cloud_firestore: ^4.15.4
   shared_preferences: ^2.2.2
+  get: ^4.6.6
+  image: ^3.3.0
+  flutter_tflite: ^1.0.1
+  flutter_tts: ^3.8.5
 
 
 
@@ -41,6 +45,7 @@ flutter:
   assets:
     - images/
     - contactStorage/
+    - assets/
 
   fonts:
     - family: Poppins
