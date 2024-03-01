@@ -40,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   ///Navigating to the Blind Map
+  void navigateToTheMap(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetection()));
+  }
 
   @override
   Widget build(BuildContext context) {
