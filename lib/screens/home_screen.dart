@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void handleCommand(Map<String, dynamic> command){
     switch(command["command"]){
       case "blind map":
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetection()));
+        navigateToTheMap();
         break;
       case "call mom":
         print("");
