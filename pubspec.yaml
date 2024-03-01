@@ -33,6 +33,7 @@ dependencies:
   image: ^3.3.0
   flutter_tflite: ^1.0.1
   flutter_tts: ^3.8.5
+  alan_voice: ^4.5.0
 
 
 
