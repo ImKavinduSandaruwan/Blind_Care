@@ -39,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  ///Navigating to the Blind Map
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
