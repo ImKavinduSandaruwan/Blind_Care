@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ///Implementing alan AI
   _HomeScreenState() {
-    AlanVoice.addButton("641857aca74f7d6596c425689db917792e956eca572e1d8b807a3e2338fdd0dc/stage");
+    AlanVoice.addButton("297ec570615d4f747742b6798d22577d2e956eca572e1d8b807a3e2338fdd0dc/stage");
     AlanVoice.onCommand.add((command) => handleCommand(command.data));
   }
 
