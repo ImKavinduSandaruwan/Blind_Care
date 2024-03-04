@@ -1,13 +1,22 @@
 import 'dart:io';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
 
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:projectblindcare/screens/turnbyturn.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:projectblindcare/components/camera_view.dart';
+import '../components/scan_controller.dart';
+import '../constants/constant.dart';
 
 
 void main(){
@@ -69,9 +78,25 @@ class _LocationMapState extends State<LocationMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Navigation'),
-      ),
+        backgroundColor: const Color(0xffF2FEFE),
+        bottomNavigationBar: CurvedNavigationBar(
+          items: const [
+            Icon(Icons.keyboard_voice_rounded)
+          ],
+          color: mainThemeColor,
+          backgroundColor: Colors.white,
+          height: 60,
+        ),
+        appBar: AppBar(
+          backgroundColor: mainThemeColor,
+          title: const Text(
+            "Navigation",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Poppins'
+            ),
+          ),
+        ),
       body: Stack(
         children: [
           if (currentPosition != null)
@@ -104,15 +129,14 @@ class _LocationMapState extends State<LocationMap> {
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.9),
                       border: const OutlineInputBorder(),
-                      suffixIcon: _destinationController.text.isNotEmpty
-                          ? IconButton(
+                      suffixIcon: _destinationController.text.isNotEmpty ?
+                      IconButton(
                         onPressed: (){
                           setState(() {
                             predictions = [];
                             _destinationController.clear();
                           });
-                        },
-                        icon: const Icon(Icons.clear_outlined),
+                          }, icon: const Icon(Icons.clear_outlined),
                       )
                           :null),
                   onChanged: (value) {
@@ -176,6 +200,22 @@ class _LocationMapState extends State<LocationMap> {
                   ),
                 ),
                 SizedBox(height: 10),
+              ],
+            ),
+          ),
+          Positioned(
+            left: 5,
+            top: MediaQuery.sizeOf(context).height / 4,
+            child: Column(
+              children: [
+                Container(
+                    width: MediaQuery.sizeOf(context).width/3,
+                    height: MediaQuery.sizeOf(context).height/3,
+                    child: CameraView()),
+                Container(
+                    width: 100,
+                    height: 100,
+                    child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))),
               ],
             ),
           )
@@ -308,6 +348,16 @@ class _LocationMapState extends State<LocationMap> {
       });
     }
     _addPolyLine();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TurnByTurnScreen(
+        startLatitude: s1!,
+        startLongitude: s2!,
+        endLatitude: endPosition!.geometry!.location!.lat!,
+        endLongitude: endPosition!.geometry!.location!.lng!,
+      )),
+    );
+
   }
 
 }

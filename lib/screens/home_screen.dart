@@ -7,6 +7,7 @@ import 'package:projectblindcare/components/reuseble_FunctionCard.dart';
 
 import 'customer_support.dart';
 import 'emergency_screen.dart';
+import 'navigation_maps.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -127,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           FunctionCard("images/map.svg","Blind Map",(){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetection()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => mapPage()));
                           }),
                           FunctionCard("images/transport.svg","Transport",(){
                             /// Add navigation route for transport page
