@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter_tflite/flutter_tflite.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 class ScanController extends GetxController{
 
   @override
@@ -69,7 +68,7 @@ class ScanController extends GetxController{
         imageStd: 127.5,
         rotation: 90,
         numResults: 1,
-        threshold: 0.5,
+        threshold: 0.8,
         asynch: true
     );
     if(detector != null){

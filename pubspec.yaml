@@ -35,6 +35,7 @@ dependencies:
   google_place: ^0.4.7
   flutter_polyline_points: ^1.0.0
   latlong2: ^0.9.0
+  alan_voice: ^4.5.0
 
   flutter_mapbox_navigation:
     git:
