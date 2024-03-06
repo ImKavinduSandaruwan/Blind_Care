@@ -430,7 +430,7 @@ class _LocationMapState extends State<LocationMap> {
               },
             ),
           ),
-          /*Positioned(
+          Positioned(
             left: 5,
             top: MediaQuery.sizeOf(context).height / 4,
             child: Column(
@@ -447,7 +447,7 @@ class _LocationMapState extends State<LocationMap> {
                     ),
               ],
             ),
-          )*/
+          )
         ],
       ),
     );
