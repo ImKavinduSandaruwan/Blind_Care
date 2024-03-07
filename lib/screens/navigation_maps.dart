@@ -19,13 +19,7 @@ import 'package:projectblindcare/components/camera_view.dart';
 import '../components/scan_controller.dart';
 import '../constants/constant.dart';
 
-//import 'package:alan_voice/alan_voice.dart';
-
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-
-import 'package:flutter_tts/flutter_tts.dart';
-
+import 'package:alan_voice/alan_voice.dart';
 
 void main(){
   runApp(mapPage());
@@ -43,26 +37,39 @@ class mapPage extends StatelessWidget {
 
 class LocationMap extends StatefulWidget {
   @override
-  _LocationMapState createState() => _LocationMapState();
+  State<LocationMap> createState() => _LocationMapState();
 }
 
 class _LocationMapState extends State<LocationMap> {
   _LocationMapState(){
-    /*AlanVoice.addButton("689e5df914105717e09b84ae8ac4018d2e956eca572e1d8b807a3e2338fdd0dc/stage");
-
-    AlanVoice.playCommand("active now");
-
+    AlanVoice.addButton(
+      "689e5df914105717e09b84ae8ac4018d2e956eca572e1d8b807a3e2338fdd0dc/stage",
+      buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT,
+    );
+    AlanVoice.activate();
     AlanVoice.onCommand.add((command) {
-      debugPrint("got new command ${command.toString()}");
-    });
-    AlanVoice.callbacks.add((command) {
-      _handleCommand(command.data);
-    });*/
-    _flutterTts.setLanguage("en-US"); // Set English (US) as default language
-    _flutterTts.setPitch(1.0); // Adjust pitch as needed (1.0 is default)
-    _flutterTts.setSpeechRate(0.5);
+      debugPrint("got new command ${command.toString()}");});
+    AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
-  //bool alanRuning = AlanVoice.isActive() as bool;
+
+  Future<void> _handleCommand(Map<String, dynamic> command) async {
+    switch(command["command"]) {
+      case "getPlace":
+        print("runstart");
+        _destinationController.clear();
+        _destinationController.text = command["text"];
+        _lastWords = _destinationController.text;
+        startProcessSubOne();
+        print("run complete");
+        break;
+      case "getSelect":
+        _numberController.text = command["text"];
+        startProcessSubTwo();
+        break;
+      default:
+        debugPrint("Unknown command");
+    }
+  }
 
   /*void runAlan(){
     AlanVoice.addButton("689e5df914105717e09b84ae8ac4018d2e956eca572e1d8b807a3e2338fdd0dc/stage");
@@ -74,191 +81,21 @@ class _LocationMapState extends State<LocationMap> {
     });
   }*/
 
-  void _handleCommand(Map<String, dynamic> command) {
-    switch(command["command"]){
-      case "start":
-        ;
-        break;
-      case "decrement":
-        ;
-        break;
-      default:
-        debugPrint("Unknown Command");
-    }
-  }
-
   @override
   void initState(){
     super.initState();
     _requestLocationPermission();
-
-    setState(() => _isListening = false);
-
-    _initSpeech();
-    _flutterTts.speak("Welcome to Navigation");
-
     apiKey = 'AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo';
     googlePlace = GooglePlace(apiKey);
     endFocusNode = FocusNode();
-
-
     _navReady = false;
   }
-
-  final FlutterTts _flutterTts = FlutterTts();
-
 
   late TextEditingController _numberController = TextEditingController();
-
-  bool _navReady = false;
-
-  SpeechToText _speechToText = SpeechToText();
-  bool _isListening = false;
-  bool _isSpeaking = false;
-  String _lastWords = '';
-  Duration? listenDelay = Duration(seconds: 3);
-
-  void _initSpeech() async {
-    await Future.delayed(listenDelay!);
-    _requestMicrophoneAcess();
-    _speechToText.initialize();
-    _speechToText.listen(
-      listenFor: listenDelay,
-    );
-    setState(() {});
-  }
-  _startListening() async {
-    try {
-      print("_startListening");
-      print(_isListening);
-      print(_isSpeaking);
-      if (_isListening && !_isSpeaking) {
-        await _speechToText.listen(onResult: _onSpeechResult);
-        await Future.delayed(Duration(seconds: 5));
-        _isListening = false;
-        print(_isListening);
-      }
-      setState(() {
-        _lastWords = '';
-      });
-      print("_startListening");
-    }
-    catch (e){
-      _isListening = false;
-      print(e);
-    }
-  }
-  void _stopListening() async {
-    if (_isListening) {
-      _isListening = false;
-      await _speechToText.stop();
-    }
-    setState(() {});
-  }
-
-  _speak(String Text) async {
-    print("_speak");
-    if (!_isListening){
-      setState(() => _isSpeaking = true);
-      print(_isSpeaking);
-      await _flutterTts.setLanguage('en-US');
-      await _flutterTts.speak(Text);
-      setState(() => _isSpeaking = false);
-      print(_isSpeaking);
-      print("_speak");
-    }
-  }
-
-  void _onSpeechResult(SpeechRecognitionResult result) {
-    print("_onSpeechResult");
-    print(_isListening);
-    print(_isSpeaking);
-    if (_isSpeaking){
-      return null;
-    }
-    setState(() {
-      _lastWords = result.recognizedWords;
-      _destinationController.text = _lastWords;
-      _flutterTts.speak(_lastWords);
-      print(_lastWords);
-    });
-    autoCompleteSearch(_lastWords);
-    print("_onSpeechResult");
-  }
-
-  int? _getNumValue(){
-    try {
-      return int.parse(_numberController.text)-1;
-    } catch (e){
-      return null;
-    }
-  }
-
-  String _numValue = '';
-  _numListener() async {
-    print("_numListener");
-    _numValue = '';
-    print(_isListening);
-    print(_isSpeaking);
-    if (_isListening && !_isSpeaking) {
-      await _speechToText.listen(onResult: _onNumResult);
-      await Future.delayed(Duration(seconds: 5));
-      _isListening = false;
-      print(_isListening);
-    }
-    setState(() {
-      _numValue = '';
-    });
-    print("_numListener");
-  }
-  void _onNumResult(SpeechRecognitionResult numResult){
-    print("_onNumResult");
-    print(_isListening);
-    print(_isSpeaking);
-    if (_isSpeaking){
-      return null;
-    }
-    setState(() {
-      _numValue = numResult.recognizedWords;
-      _numberController.text = _numValue;
-      _flutterTts.speak(_numValue);
-      print(_numValue);
-    });
-    print("_onNumResult");
-  }
-
-  _enterDestination() async{
-    _requestMicrophoneAcess();
-    _navReady = false;
-    print("_enterDestination");
-    print(_isListening);
-    print(_isSpeaking);
-    if (_isListening || _isSpeaking){
-      return null;
-    }
-    _lastWords = '';
-    print(_lastWords);
-    _destinationController.clear();
-    predictions.clear();
-    _isSpeaking = true;
-    await _speak("Where do you want to go?");
-    print("POINT 1");
-    _flutterTts.awaitSpeakCompletion(true);
-    //AlanVoice.deactivate();
-    _isListening = true;
-    await Future.delayed(const Duration(seconds: 1));
-    print("POINT 2");
-    await _startListening();
-    _isListening = false;
-    print("_enterDestination");
-  }
+  final TextEditingController _destinationController = TextEditingController();
 
   GoogleMapController? mapController;
-  final TextEditingController _destinationController = TextEditingController();
   Set<Marker> markers = {};
-
-  final int delayInMilliseconds = 2000;
-
   Position? currentPosition;
   late GooglePlace googlePlace;
   List<AutocompletePrediction> predictions = [];
@@ -271,21 +108,57 @@ class _LocationMapState extends State<LocationMap> {
   String apiKey = "AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo";
 
 
+  bool _navReady = false;
+
+  String _lastWords = '';
+  String _numValue = '';
+
+
+  int? _getNumValue(){
+    try {
+      return int.parse(_numberController.text)-1;
+    } catch (e){
+      return null;
+    }
+  }
+
+  startProcessMain(){
+    print("error");
+  }
+  startProcessSubOne() async {
+    _enterDestination();
+    await Future.delayed(Duration(seconds: 3));
+    await _readPredictions();
+    await _selectLocation();
+  }
+
+  startProcessSubTwo() async {
+    await _setData();
+    Future.delayed(Duration(seconds: 3));
+    if (_navReady){
+      _requestLocationPermission();
+      _setDestination();
+      _getPolyline();
+    }
+  }
+
+  void _enterDestination() async {
+    print("_enterDestination");
+
+    _lastWords = _destinationController.text;
+    print(_lastWords);
+    autoCompleteSearch(_lastWords);
+
+    print("_enterDestination");
+  }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    _flutterTts.stop();
-    _speechToText.stop();
     endFocusNode.dispose();
+    _destinationController.dispose();
+    _numberController.dispose();
   }
-
-  voiceMain() async {
-    await _enterDestination();
-    await Future.delayed(const Duration(seconds: 1));
-
-}
 
   @override
   Widget build(BuildContext context) {
@@ -381,7 +254,6 @@ class _LocationMapState extends State<LocationMap> {
                               endPosition = details.result;
                               _destinationController.text = details.result!.name!;
                               predictions = [];
-                              _stopListening();
                             });
                           }
                         },
@@ -406,7 +278,9 @@ class _LocationMapState extends State<LocationMap> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      _enterDestination();
+                      _requestLocationPermission();
+                      _setDestination();
+                      _getPolyline();
                     },
                     child: Text('Start', style: TextStyle(color: Colors.white)),
                   ),
@@ -415,22 +289,15 @@ class _LocationMapState extends State<LocationMap> {
               ],
             ),
           ),
-          Center(
+          /*Center(
             child: ElevatedButton(
               child: Text("CLICKME"),
               onPressed: () async {
-                await readPredictions();
-                await _selectLocation();
-                await _setData();
-                if (_navReady){
-                  _requestLocationPermission();
-                  _setDestination();
-                  _getPolyline();
-                }
+                _enterDestination();
               },
             ),
-          ),
-          Positioned(
+          ),*/
+          /*Positioned(
             left: 5,
             top: MediaQuery.sizeOf(context).height / 4,
             child: Column(
@@ -447,7 +314,7 @@ class _LocationMapState extends State<LocationMap> {
                     ),
               ],
             ),
-          )
+          )*/
         ],
       ),
     );
@@ -465,58 +332,51 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  Future<void> readPredictions() async {
-    for (int i = 0; i < predictions.length; i++) {
-      int x = i + 1;
-      String num = x.toString();
-      await _speak("0"+num);
-      _flutterTts.awaitSpeakCompletion(true);
-      String placePredictions = predictions[i].description.toString();
-      await _speak(placePredictions);
-      _flutterTts.awaitSpeakCompletion(true);
-      print(placePredictions);
+  Future<void> _readPredictions() async {
+    print("_readPredictions");
+    print(predictions);
+    if (predictions.isNotEmpty) {
+      for (int i = 0; i < predictions.length; i++) {
+        int x = i + 1;
+        String num = "0"+x.toString();
+        AlanVoice.playText(num);
+        String placePredictions = predictions[i].description.toString();
+        AlanVoice.playText(placePredictions);
+
+        print(placePredictions);
+      }
     }
-    _isSpeaking = false;
+    print("_readPredictions");
   }
 
   Future<void> _selectLocation() async {
     print("_selectLocation");
-    print(_isListening);
-    print(_isSpeaking);
-    if (!_isSpeaking && !_isListening) {
-      await _speak("Select a number");
-      print("break 1");
-      print(_isListening);
-      print(_isSpeaking);
-      if (!_isSpeaking) {
-        _isListening = true;
-        _numValue = '';
-        await _numListener();
-        await Future.delayed(Duration(seconds: 3));
-        print(_numberController.text);
-        print(_isListening);
-        print(_isSpeaking);
-      }
-    }
+    String _selectString = "Select a number";
+    AlanVoice.playText(_selectString);
+
+    _numValue = '';
+    _numValue = _numberController.text;
+    print(_numberController.text);
+    print(_numValue);
+
     print("_selectLocation");
   }
 
   _setData() async {
     print("_setData");
-    print(_isListening);
-    print(_isSpeaking);
-    if(!_isListening){
-      await _speak(_numberController.text); //numberCController,text
-      print("your number is "+ _numberController.text);
-    }
+
+    AlanVoice.playText(_numValue);
+
+    print("your number is "+ _numberController.text);
+
     int? num = _getNumValue();
     print(num);
     try{
       if (num!<0 || num>= predictions.length) {
         _navReady = false;
         print("BREAK 1");
-        _enterDestination();
-        return;
+        startProcessMain();
+        return null;
       }
       print("BREAK 2");
       final placeId = predictions[num].placeId!;
@@ -528,19 +388,21 @@ class _LocationMapState extends State<LocationMap> {
         setState(() {
           endPosition = details.result;
           _destinationController.text = details.result!.name!;
+
           print(_numberController.text + _destinationController.text);
-          _speak(_numberController.text+_destinationController.text);
+          String finalPlace = _numberController.text+_destinationController.text;
+          AlanVoice.playText(finalPlace);
           predictions = [];
           _navReady = true;
         });
       } else {
         _navReady = false;
-        _enterDestination();
+        startProcessMain();
       }
     }
     catch (e){
       _navReady = false;
-      _enterDestination();
+      startProcessMain();
     }
     print("_setData");
   }
@@ -576,17 +438,6 @@ class _LocationMapState extends State<LocationMap> {
     final status = await Permission.locationWhenInUse.request();
     if (status == PermissionStatus.granted) {
       _getCurrentLocation();
-    } else if (status == PermissionStatus.permanentlyDenied) {
-      openAppSettings();
-    } else {
-      print('error');
-    }
-  }
-
-  Future<void> _requestMicrophoneAcess() async {
-    final status = await Permission.microphone.request();
-    if (status == PermissionStatus.granted) {
-      return;
     } else if (status == PermissionStatus.permanentlyDenied) {
       openAppSettings();
     } else {
@@ -670,7 +521,7 @@ class _LocationMapState extends State<LocationMap> {
       });
     }
     _addPolyLine();
-    Future.delayed(Duration(milliseconds: delayInMilliseconds), ()
+    await Future.delayed(Duration(seconds: 2), ()
     {
       Navigator.push(
         context,
