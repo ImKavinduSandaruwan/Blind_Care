@@ -63,6 +63,7 @@ class _LocationMapState extends State<LocationMap> {
         print("run complete");
         break;
       case "getSelect":
+        _numberSelect = true;
         _numberController.text = command["text"];
         startProcessSubTwo();
         break;
@@ -113,6 +114,8 @@ class _LocationMapState extends State<LocationMap> {
   String _lastWords = '';
   String _numValue = '';
 
+  bool _predictionsRead = false;
+  bool _numberSelect = false;
 
   int? _getNumValue(){
     try {
@@ -127,8 +130,9 @@ class _LocationMapState extends State<LocationMap> {
   }
   startProcessSubOne() async {
     _enterDestination();
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 5));
     await _readPredictions();
+    await Future.delayed(Duration(seconds: 3));
     await _selectLocation();
   }
 
@@ -142,14 +146,17 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  void _enterDestination() async {
+  _enterDestination() async {
     print("_enterDestination");
 
+    predictions.clear();
     _lastWords = _destinationController.text;
     print(_lastWords);
     autoCompleteSearch(_lastWords);
 
     print("_enterDestination");
+    _predictionsRead = false;
+    _numberSelect = false;
   }
 
   @override
@@ -333,6 +340,9 @@ class _LocationMapState extends State<LocationMap> {
   }
 
   Future<void> _readPredictions() async {
+    if (_predictionsRead){
+      return null;
+    }
     print("_readPredictions");
     print(predictions);
     if (predictions.isNotEmpty) {
@@ -343,6 +353,7 @@ class _LocationMapState extends State<LocationMap> {
         String placePredictions = predictions[i].description.toString();
         AlanVoice.playText(placePredictions);
 
+        _predictionsRead = true;
         print(placePredictions);
       }
     }
@@ -350,7 +361,13 @@ class _LocationMapState extends State<LocationMap> {
   }
 
   Future<void> _selectLocation() async {
+    if (_numberSelect){
+      return null;
+    }
     print("_selectLocation");
+    if (predictions.isEmpty){
+      return null;
+    }
     String _selectString = "Select a number";
     AlanVoice.playText(_selectString);
 
@@ -358,7 +375,7 @@ class _LocationMapState extends State<LocationMap> {
     _numValue = _numberController.text;
     print(_numberController.text);
     print(_numValue);
-
+    _numberSelect = true;
     print("_selectLocation");
   }
 

@@ -141,7 +141,12 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     _controller?.dispose();
     control.dispose();
     _controller?.clearRoute();
-    Navigator.pop(context);
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      SystemNavigator.pop();
+    }
+
   }
 
   void startNav(MapBoxNavigationViewController control){
