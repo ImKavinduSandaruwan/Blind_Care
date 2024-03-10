@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,13 @@ class CustomerService extends StatefulWidget {
 }
 
 class _CustomerServiceState extends State<CustomerService> {
+
+
+  void sendDataToFirestore() {
+    FirebaseFirestore.instance.collection('ginura testing1').add({
+      'text': 'data added',
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +51,15 @@ class _CustomerServiceState extends State<CustomerService> {
         children: [
           //TODO: Implement other functionalities
           Expanded(
-            flex: 3,
-            child: Container(),
+            flex: 1,
+            child: GestureDetector(
+              onTap: sendDataToFirestore,
+              child: Container(
+                width: 200,
+                height: 200,
+                color: Colors.red,
+              ),
+            ),
           ),
           Expanded(
             flex: 1,

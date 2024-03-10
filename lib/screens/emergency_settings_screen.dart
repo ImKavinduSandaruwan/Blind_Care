@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -19,6 +20,36 @@ class EmergencySettingsScreen extends StatefulWidget {
 
 
 class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
+
+  static Future<String> sendDataToFirestore(String name, String phone) async {
+    DocumentReference documentReference = await FirebaseFirestore.instance.collection('Contacts').add({
+      'name': '${name}',
+      'phone':'${phone}'
+    });
+
+    return documentReference.id;
+  }
+
+  Future<void> deleteAllDataFromFirestore() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Contacts').get();
+
+    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+      await documentSnapshot.reference.delete();
+    }
+  }
+
+  static Future<void> deleteDataByNameAndPhone(String name, String phone) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Contacts')
+        .where('name', isEqualTo: name)
+        .where('phone', isEqualTo: phone)
+        .get();
+
+    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+      await documentSnapshot.reference.delete();
+    }
+  }
+
 
   static List<Widget> addedContacts = [];
 
@@ -65,18 +96,13 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
                 emgContactBoxDetails['${nameController.text}'] = phoneNumberController.text;
 
-                Person newPerson = Person(name: '${nameController.text}', phoneNumber: '${phoneNumberController.text}');
-                await Person.savePerson(newPerson);
+                // Person newPerson = Person(name: '${nameController.text}', phoneNumber: '${phoneNumberController.text}');
+                // await Person.savePerson(newPerson);
+
+                sendDataToFirestore(nameController.text, phoneNumberController.text);
 
                 nameController.clear();
                 phoneNumberController.clear();
-
-                Navigator.of(context).pop();
-
-                // contactMap["${nameController}"] = "${phoneNumberController}";
-
-                // EmergencyCantactListHandler.saveMap("user", contactMap);
-
 
                 setState(() {
                   addedContacts;
@@ -138,7 +164,12 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
                   ],
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await deleteDataByNameAndPhone(name, phone);
+
+                      addedContacts.removeAt(1);
+
+                    },
                     icon: Icon(
                         Icons.delete,
                       color: Colors.red,
@@ -190,21 +221,6 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
                   child: Column(
                     children: addedContacts,
                   )
-              ),
-
-              Container(
-                margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                height: 60.0,
-                width: screenWidth * 0.9,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _showDialog(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(255, 10, 10, 0.7)),
-                  ),
-                  child: Text("Delete",style: TextStyle(color: Colors.black,fontSize: 30,fontFamily:'Arial',fontWeight: FontWeight.bold)),
-                ),
               ),
 
               Container(
