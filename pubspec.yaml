@@ -11,10 +11,9 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  flutter_svg_provider: ^1.0.7
+  flutter_svg_provider: ^1.0.4
   curved_navigation_bar: ^1.0.3
   camera: ^0.10.5+9
-#  url_launcher: ^6.0.12
   flutter_phone_direct_caller: ^2.1.1
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
@@ -29,7 +28,19 @@ dependencies:
   google_sign_in_ios: ^5.7.4
   cloud_firestore: ^4.15.4
   shared_preferences: ^2.2.2
+  get: ^4.6.6
+  image: ^3.3.0
+  flutter_tflite: ^1.0.1
+  flutter_tts: ^3.8.5
+  google_place: ^0.4.7
+  flutter_polyline_points: ^1.0.0
+  latlong2: ^0.9.0
+  alan_voice: ^4.5.0
 
+  flutter_mapbox_navigation:
+    git:
+      url: https://github.com/IqbalInfasIIT/flutter_mapbox_navigation.git
+      ref: master
 
 
 dev_dependencies:
@@ -41,6 +52,7 @@ flutter:
   assets:
     - images/
     - contactStorage/
+    - assets/
 
   fonts:
     - family: Poppins

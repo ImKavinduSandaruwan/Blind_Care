@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:projectblindcare/screens/object_detection.dart';
 import 'package:projectblindcare/components/reuseble_FunctionCard.dart';
-
+import 'package:alan_voice/alan_voice.dart';
 import 'customer_support.dart';
 import 'emergency_screen.dart';
+import 'navigation_maps.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +18,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  ///Implementing alan AI
+  _HomeScreenState() {
+    AlanVoice.addButton("297ec570615d4f747742b6798d22577d2e956eca572e1d8b807a3e2338fdd0dc/stage");
+    AlanVoice.onCommand.add((command) => handleCommand(command.data));
+  }
+
+  /// This method is responsible for handling voice commands.
+  // TODO: Add other methods that needs to execute via voice command
+  void handleCommand(Map<String, dynamic> command){
+    switch(command["command"]){
+      case "blind map":
+        navigateToTheMap();
+        break;
+      case "call mom":
+        print("");
+        break;
+      default:
+        print('invalid command');
+    }
+  }
+
+  ///Navigating to the Blind Map
+  void navigateToTheMap(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetection()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -70,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Column(
@@ -127,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           FunctionCard("images/map.svg","Blind Map",(){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetection()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => mapPage()));
                           }),
                           FunctionCard("images/transport.svg","Transport",(){
                             /// Add navigation route for transport page
@@ -156,7 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-
     );
   }
 }
