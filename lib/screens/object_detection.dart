@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -6,6 +5,21 @@ import 'package:projectblindcare/components/camera_view.dart';
 import '../components/scan_controller.dart';
 import '../constants/constant.dart';
 import 'package:camera/camera.dart';
+
+///////////////////////////////////
+
+void main() => runApp(ObjectDetectionApp()); // Call runApp with our app class
+
+class ObjectDetectionApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp( // Use GetMaterialApp for GetX functionality
+      home: ObjectDetection(),
+    );
+  }
+}
+
+//////////////////////////////
 
 class ObjectDetection extends StatefulWidget {
   const ObjectDetection({super.key});
@@ -24,12 +38,12 @@ class _ObjectDetectionState extends State<ObjectDetection> {
         child: Column(
           children: [
             Container(
-                width: 200,
-                height: 200,
+                width: screenWidth/2,
+                height: screenHeight/2,
                 child: CameraView()),
             Container(
-                width: 100,
-                height: 100,
+                width: screenWidth,
+                height: screenHeight/2,
                 child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))),
           ],
         ),

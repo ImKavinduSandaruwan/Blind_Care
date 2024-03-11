@@ -2,7 +2,14 @@ import 'package:camera/camera.dart';
 import 'package:flutter_tflite/flutter_tflite.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'package:flutter_tts/flutter_tts.dart';
+
 class ScanController extends GetxController{
+
+  final FlutterTts _flutterTts = FlutterTts();
+
+  bool ttsRunning = false;
 
   @override
   void onInit() {
@@ -10,6 +17,14 @@ class ScanController extends GetxController{
     initCamera();
     initTlLite();
   }
+
+  void initTts() async {
+    // Configure TTS engine
+    await _flutterTts.setLanguage("en-US");
+    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.awaitSpeakCompletion(true);
+  }
+
 
   @override
   void dispose() {
@@ -74,6 +89,19 @@ class ScanController extends GetxController{
     if(detector != null){
       print("😂😂😂😂😂😂😂 $detector");
       detectionResult.value = detector.toString();
+      print(detectionResult.value);
+      await _speak(detectionResult.value);
+
     }
+  }
+
+  _speak(String textSpeech) async {
+    if (ttsRunning){
+      return null;
+    }
+    ttsRunning = true;
+    await _flutterTts.speak(textSpeech);
+    await _flutterTts.awaitSpeakCompletion(true);
+    ttsRunning = false;
   }
 }
