@@ -1,25 +1,20 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:alan_voice/alan_voice.dart';
 
-
-import '../main.dart';
+import 'customer_support.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -38,14 +33,66 @@ class EmergencyScreen extends StatefulWidget {
 }
 
 bool contactLoaded = false;
-
 String msgOrCall = "";
-
 double latitude = 0.00;
 double longitude = 0.00;
 
-
 class _emergencyFeature extends State<EmergencyScreen> {
+
+
+  // _emergencyFeature() {
+  //   /// Init Alan Button with project key from Alan AI Studio
+  //   AlanVoice.addButton("ca94ca1f14c44ad80e5744543cbdb3d52e956eca572e1d8b807a3e2338fdd0dc/stage");
+  //
+  //   /// Handle commands from Alan AI Studio
+  //   AlanVoice.onCommand.add((command) => _handleCommand(command.data));
+  // }
+
+  _emergencyFeature() {
+    /// Init Alan Button with project key from Alan AI Studio
+    AlanVoice.addButton("da588beeb84fdc677415300ad0d79f162e956eca572e1d8b807a3e2338fdd0dc/stage");
+
+    /// Handle commands from Alan AI Studio
+    AlanVoice.onCommand.add((command) => _handleCommand(command.data));
+  }
+
+  void _handleCommand(Map<String, dynamic> command) {
+    switch(command["command"]){
+      case "police":
+        FlutterPhoneDirectCaller.callNumber("0703088444");
+        break;
+      case "current location":
+        showBottomSheetForCurrentLocationSharing(context);
+        break;
+      case "call contacts":
+        var NAME = command["text"];
+        print('name name $NAME');
+
+        if (EmergencyCantactListHandler.contactsMap.containsKey(NAME)) {
+          String? NAMEphone = EmergencyCantactListHandler.contactsMap[NAME];
+          print(NAMEphone);
+          FlutterPhoneDirectCaller.callNumber("$NAMEphone");
+        } else {
+          print("Key does not exist in the map.");
+        }
+        break;
+
+      case "location":
+        var NAMEMSG = command["text"];
+        print('name name $NAMEMSG');
+
+        if (EmergencyCantactListHandler.contactsMap.containsKey(NAMEMSG)) {
+          String? NAMEmsg = EmergencyCantactListHandler.contactsMap[NAMEMSG];
+          print(NAMEmsg);
+
+          EmergencyCantactListHandler.sendMsg(NAMEMSG,NAMEmsg);
+        }
+        break;
+
+
+
+    }
+  }
 
   final _fireStore = FirebaseFirestore.instance;
 
@@ -74,15 +121,28 @@ class _emergencyFeature extends State<EmergencyScreen> {
                           Text("Emergency handling",style: TextStyle(fontSize: 28,fontFamily:'Arial',fontWeight: FontWeight.bold)),
                           // Text("Want to contact someone?",style: TextStyle(fontSize: 24,fontFamily:'Arial',fontWeight: FontWeight.bold)),
                           Text("Contact nearest police station",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
-                          ElevatedButton(
-                              onPressed: (){
-                                FlutterPhoneDirectCaller.callNumber('+94703088444');
+                          SizedBox(
+                            width: screenWidth*0.9, // Change the width value as per your requirement
+                            child: ElevatedButton(
+                              onPressed: () {
+                                FlutterPhoneDirectCaller.callNumber('119');
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
                               ),
-                              child: Text("Kurunegala police station",style: TextStyle(fontSize: 22,fontFamily:'Arial',fontWeight: FontWeight.bold,color: Color.fromRGBO(89, 89, 89, 1.0))
-                              )
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Police station",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontFamily: 'Arial',
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(89, 89, 89, 1.0),
+                                  ),
+                                ),
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -164,7 +224,6 @@ class _emergencyFeature extends State<EmergencyScreen> {
       },
     );
   }
-
 
   late GoogleMapController googleMapController;
 
@@ -344,6 +403,8 @@ class EmergencyCantactListHandler {
 
   late Map<String, dynamic> myMap;
 
+  static Map<String, String> contactsMap = {};
+
 
   static void addDynamicWidget(String name,String phone) {
     _emergencyFeature.dynamicWidgets.add(
@@ -384,6 +445,22 @@ class EmergencyCantactListHandler {
         ),
       )
     );
+  }
+
+  static Future<void> sendMsg(name, phone) async {
+    final Uri smsLaunchUri = Uri(
+      scheme: 'sms',
+      path: phone,
+      queryParameters: <String, String>{
+        'body': Uri.encodeComponent('Hey $name, I am in emergency situation. This is my current Location: https://maps.google.com/?q=$latitude,$longitude'),
+      },
+    );
+
+    if(await canLaunchUrl(smsLaunchUri)){
+    await launchUrl(smsLaunchUri);
+    }else{
+    print("hello hello");
+    }
   }
 
 

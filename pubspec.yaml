@@ -29,7 +29,7 @@ dependencies:
   google_sign_in_ios: ^5.7.4
   cloud_firestore: ^4.15.4
   shared_preferences: ^2.2.2
-
+  alan_voice: ^4.5.0
 
 
 dev_dependencies:
