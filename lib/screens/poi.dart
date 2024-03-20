@@ -47,25 +47,48 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
         '&key=$apiKey';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      print('awa oi');
-      // final Map<String, dynamic> data = json.decode(response.body);
-      // if (data['status'] == 'OK') {
-      //   final List<dynamic> results = data['results'];
-      //   return results.map<Map<String, dynamic>>((result) {
-      //     return {
-      //       'name': result['name'],
-      //       'vicinity': result['vicinity'],
-      //       'latitude': result['geometry']['location']['lat'],
-      //       'longitude': result['geometry']['location']['lng'],
-      //     };
-      //   }).toList();
-      // } else {
-      //   throw Exception('Failed to fetch nearby places');
-      // }
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (data['status'] == 'OK') {
+        final List<dynamic> results = data['results'];
+        return results.map<Map<String, dynamic>>((result) {
+          return {
+            'name': result['name'],
+            'vicinity': result['vicinity'],
+            'latitude': result['geometry']['location']['lat'],
+            'longitude': result['geometry']['location']['lng'],
+          };
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch nearby places');
+      }
     } else {
       throw Exception('Failed to fetch nearby places');
     }
   }
+
+  // void fetchNearbyPharmaciesAndHotel(double latitude, double longitude) {
+  //
+  //   //Get pharmacies
+  //   getNearbyPlaces(latitude, longitude, 'pharmacy').then((pharmacies) {
+  //     print('Nearby Pharmacies:');
+  //     for (final pharmacy in pharmacies) {
+  //       print('${pharmacy['name']}: ${pharmacy['vicinity']}');
+  //     }
+  //   }).catchError((e) {
+  //     print('Error fetching nearby pharmacies: $e');
+  //   });
+  //
+  //   //get hotels
+  //   getNearbyPlaces(latitude, longitude, 'lodging').then((hotels) {
+  //     print('Nearby Hotels:');
+  //     for (final hotel in hotels) {
+  //       print('${hotel['name']}: ${hotel['vicinity']}');
+  //     }
+  //   }).catchError((e) {
+  //     print('Error fetching nearby hotels: $e');
+  //   });
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +106,7 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
               children: [
                 TextButton(
                   onPressed: () {
-                    getNearbyPlaces(lat, lon, "pharmacy");
+                    //fetchNearbyPharmaciesAndHotel(lat, lon);
                   },
                   child: Text("click me"),
                 ),
@@ -97,5 +120,4 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
       ),
     );
   }
-
 }
