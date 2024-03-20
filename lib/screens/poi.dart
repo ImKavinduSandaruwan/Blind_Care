@@ -78,15 +78,15 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
       print('Error fetching nearby pharmacies: $e');
     });
 
-    // //get hotels
-    // getNearbyPlaces(latitude, longitude, 'lodging').then((hotels) {
-    //   print('Nearby Hotels:');
-    //   for (final hotel in hotels) {
-    //     print('${hotel['name']}: ${hotel['vicinity']}');
-    //   }
-    // }).catchError((e) {
-    //   print('Error fetching nearby hotels: $e');
-    // });
+    //get hotels
+    getNearbyPlaces(latitude, longitude, 'lodging').then((hotels) {
+      print('Nearby Hotels:');
+      for (final hotel in hotels) {
+        print('${hotel['name']}: ${hotel['vicinity']}');
+      }
+    }).catchError((e) {
+      print('Error fetching nearby hotels: $e');
+    });
 
   }
 
