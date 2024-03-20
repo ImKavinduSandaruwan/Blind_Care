@@ -66,29 +66,29 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
     }
   }
 
-  // void fetchNearbyPharmaciesAndHotel(double latitude, double longitude) {
-  //
-  //   //Get pharmacies
-  //   getNearbyPlaces(latitude, longitude, 'pharmacy').then((pharmacies) {
-  //     print('Nearby Pharmacies:');
-  //     for (final pharmacy in pharmacies) {
-  //       print('${pharmacy['name']}: ${pharmacy['vicinity']}');
-  //     }
-  //   }).catchError((e) {
-  //     print('Error fetching nearby pharmacies: $e');
-  //   });
-  //
-  //   //get hotels
-  //   getNearbyPlaces(latitude, longitude, 'lodging').then((hotels) {
-  //     print('Nearby Hotels:');
-  //     for (final hotel in hotels) {
-  //       print('${hotel['name']}: ${hotel['vicinity']}');
-  //     }
-  //   }).catchError((e) {
-  //     print('Error fetching nearby hotels: $e');
-  //   });
-  //
-  // }
+  void fetchNearbyPharmaciesAndHotel(double latitude, double longitude) {
+
+    //Get pharmacies
+    getNearbyPlaces(latitude, longitude, 'pharmacy').then((pharmacies) {
+      print('Nearby Pharmacies:');
+      for (final pharmacy in pharmacies) {
+        print('${pharmacy['name']}: ${pharmacy['vicinity']}');
+      }
+    }).catchError((e) {
+      print('Error fetching nearby pharmacies: $e');
+    });
+
+    // //get hotels
+    // getNearbyPlaces(latitude, longitude, 'lodging').then((hotels) {
+    //   print('Nearby Hotels:');
+    //   for (final hotel in hotels) {
+    //     print('${hotel['name']}: ${hotel['vicinity']}');
+    //   }
+    // }).catchError((e) {
+    //   print('Error fetching nearby hotels: $e');
+    // });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
               children: [
                 TextButton(
                   onPressed: () {
-                    //fetchNearbyPharmaciesAndHotel(lat, lon);
+                    fetchNearbyPharmaciesAndHotel(lat, lon);
                   },
                   child: Text("click me"),
                 ),
