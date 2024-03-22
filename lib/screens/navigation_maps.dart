@@ -180,7 +180,6 @@ class _LocationMapState extends State<LocationMap> {
         height: 60,
       ),
       appBar: AppBar(
-        backgroundColor: mainThemeColor,
         title: const Text(
           "Navigation",
           style: TextStyle(
@@ -296,15 +295,7 @@ class _LocationMapState extends State<LocationMap> {
               ],
             ),
           ),
-          /*Center(
-            child: ElevatedButton(
-              child: Text("CLICKME"),
-              onPressed: () async {
-                _enterDestination();
-              },
-            ),
-          ),*/
-          /*Positioned(
+          Positioned(
             left: 5,
             top: MediaQuery.sizeOf(context).height / 4,
             child: Column(
@@ -321,7 +312,7 @@ class _LocationMapState extends State<LocationMap> {
                     ),
               ],
             ),
-          )*/
+          )
         ],
       ),
     );
