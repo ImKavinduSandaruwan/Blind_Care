@@ -29,6 +29,7 @@ Future<void> main() async {
   contacts.forEach((contact) {
     EmergencyCantactListHandler.addDynamicWidget('${contact['name']}', '${contact['phone']}');
     EmergencySettingsScreenState.addedSavedContact('${contact['name']}','${contact['phone']}');
+    EmergencyCantactListHandler.contactsMap[contact['name']] = contact['phone'];
   });
 
 

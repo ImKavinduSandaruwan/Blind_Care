@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
@@ -22,22 +23,40 @@ class _HomeScreenState extends State<HomeScreen> {
   ///Implementing alan AI
   _HomeScreenState() {
     AlanVoice.addButton("297ec570615d4f747742b6798d22577d2e956eca572e1d8b807a3e2338fdd0dc/stage");
-    AlanVoice.onCommand.add((command) => handleCommand(command.data));
+    AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
 
-  /// This method is responsible for handling voice commands.
-  // TODO: Add other methods that needs to execute via voice command
-  void handleCommand(Map<String, dynamic> command){
-    switch(command["command"]){
-      case "blind map":
-        navigateToTheMap();
+  void _handleCommand(Map<String, dynamic> command) {
+    switch(command["command"]) {
+      case "police":
+        FlutterPhoneDirectCaller.callNumber("0703088444");
         break;
-      case "call mom":
-        print("");
+      case "call contacts":
+        var NAME = command["text"];
+        print('name name $NAME');
+
+        if (EmergencyCantactListHandler.contactsMap.containsKey(NAME)) {
+          String? NAMEphone = EmergencyCantactListHandler.contactsMap[NAME];
+          print(NAMEphone);
+          FlutterPhoneDirectCaller.callNumber("$NAMEphone");
+        } else {
+          print("Key does not exist in the map.");
+        }
         break;
-      default:
-        print('invalid command');
+
+      case "location":
+        var NAMEMSG = command["text"];
+        print('name name $NAMEMSG');
+
+        if (EmergencyCantactListHandler.contactsMap.containsKey(NAMEMSG)) {
+          String? NAMEmsg = EmergencyCantactListHandler.contactsMap[NAMEMSG];
+          print(NAMEmsg);
+
+          EmergencyCantactListHandler.sendMsg(NAMEMSG, NAMEmsg);
+        }
+        break;
     }
+
   }
 
   ///Navigating to the Blind Map
