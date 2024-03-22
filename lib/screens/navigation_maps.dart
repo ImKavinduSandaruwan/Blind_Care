@@ -71,17 +71,6 @@ class _LocationMapState extends State<LocationMap> {
         debugPrint("Unknown command");
     }
   }
-
-  /*void runAlan(){
-    AlanVoice.addButton("689e5df914105717e09b84ae8ac4018d2e956eca572e1d8b807a3e2338fdd0dc/stage");
-    AlanVoice.playCommand("active now");
-    AlanVoice.playCommand("command");
-
-    AlanVoice.onCommand.add((command) {
-      debugPrint("got new command ${command.toString()}");
-    });
-  }*/
-
   @override
   void initState(){
     super.initState();

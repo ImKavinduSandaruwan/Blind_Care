@@ -273,8 +273,6 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     clearOptions();
     control.finishNavigation();
     _isNavigating = false;
-    await Future.delayed(Duration(seconds: 3));
-    SystemNavigator.pop();
   }
 
   @override
