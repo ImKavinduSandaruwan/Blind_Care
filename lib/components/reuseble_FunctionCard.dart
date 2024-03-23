@@ -31,7 +31,7 @@ class FunctionCard extends StatelessWidget {
                 radius: 50,
                 backgroundColor: const Color(0xffC5C5C5),
                 child: Image(
-                  image: Svg(fileName),
+                  image: AssetImage(fileName),
                 ),
               ),
               Text(
