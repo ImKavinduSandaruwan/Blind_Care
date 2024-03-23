@@ -6,8 +6,6 @@ import '../components/scan_controller.dart';
 import '../constants/constant.dart';
 import 'package:camera/camera.dart';
 
-///////////////////////////////////
-
 void main() => runApp(ObjectDetectionApp()); // Call runApp with our app class
 
 class ObjectDetectionApp extends StatelessWidget {
@@ -19,7 +17,6 @@ class ObjectDetectionApp extends StatelessWidget {
   }
 }
 
-//////////////////////////////
 
 class ObjectDetection extends StatefulWidget {
   const ObjectDetection({super.key});
@@ -44,7 +41,8 @@ class _ObjectDetectionState extends State<ObjectDetection> {
             Container(
                 width: screenWidth,
                 height: screenHeight/2,
-                child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))),
+                child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))
+            ),
           ],
         ),
     );

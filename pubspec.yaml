@@ -38,15 +38,10 @@ dependencies:
   alan_voice: ^4.5.0
   http: ^0.13.6
   modal_progress_hud_nsn: ^0.5.1
+  flutter_mapbox_navigation: ^0.2.2
 
 
   speech_to_text: ^6.6.0
-
-
-  flutter_mapbox_navigation:
-    git:
-      url: https://github.com/eopeter/flutter_mapbox_navigation.git
-      ref: master
 
 
 dev_dependencies:

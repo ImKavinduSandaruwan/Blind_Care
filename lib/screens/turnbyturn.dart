@@ -13,11 +13,11 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-void main(){
+/*void main(){
   runApp(
       TurnByTurnScreen(startLatitude: 6.8805411, startLongitude: 79.8704201, endLatitude: 6.8894260, endLongitude: 79.8763152)
   );
-}
+}*/
 
 class TurnByTurnScreen  extends StatefulWidget {
   final double startLatitude;
@@ -80,32 +80,16 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
         '&steps=true&voice_instructions=true&&banner_instructions=true&&voice_units=metric';
     var response = await http.get(Uri.parse(url));
     var count = 0;
-    print("runner");
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
-      // print("JSON Body Print");
-      // print(jsonResponse);
-      // print("JSON ANNOUNCEMENTS Print");
-      List<String> announcements = extractAnnouncements(jsonResponse);
-      for (var announcement in announcements) {
-        // print(announcement);
-      }
-      print("JSON BANNERS Print");
-      List<String> bannerInstructions = extractBannerInstructions(jsonResponse);
-      for (var instruction in bannerInstructions) {
-        // print(instruction);
-      }
-      // print(announcements.length);
-      // print(bannerInstructions.length);
       getNextManeuvers(jsonResponse);
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      debugPrint('Request failed with status: ${response.statusCode}.');
     }
   }
   List<Map<String, dynamic>> maneuvers = [];
   List<Map<String, dynamic>> getNextManeuvers(var jsonResponse) {
     for (var leg in jsonResponse['routes'][0]['legs']) {
-      print("legs");
       for (var step in leg['steps']) {
         var maneuver = step['maneuver'];
         maneuvers.add({
@@ -114,38 +98,9 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
           'bearing_after': maneuver['bearing_after'],
           'location': maneuver['location']
         });
-        print("manuGinobli");
-        print(maneuver);
-        print(maneuver["instruction"]);
       }
     }
     return maneuvers;
-  }
-
-  List<String> extractBannerInstructions(var jsonResponse) {
-    List<String> instructions = [];
-    for (var leg in jsonResponse['routes'][0]['legs']) {
-      for (var step in leg['steps']) {
-        if (step.containsKey('bannerInstructions')) {
-          for (var instruction in step['bannerInstructions']) {
-            instructions.add(instruction['primary']['text']);
-          }
-        }
-      }
-    }
-    return instructions;
-  }
-
-  List<String> extractAnnouncements(var jsonResponse) {
-    List<String> announcements = [];
-    for (var leg in jsonResponse['routes'][0]['legs']) {
-      for (var step in leg['steps']) {
-        for (var instruction in step['voiceInstructions']) {
-          announcements.add(instruction['announcement']);
-        }
-      }
-    }
-    return announcements;
   }
 
   late WayPoint _origin, _destination;
@@ -166,14 +121,10 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
   bool _isSpeaking = false;
 
   _speak(String Text) async {
-    print("_speak");
       setState(() => _isSpeaking = true);
-      print(_isSpeaking);
       await _flutterTts.setLanguage('en-US');
       await _flutterTts.speak(Text);
       setState(() => _isSpeaking = false);
-      print(_isSpeaking);
-      print("_speak");
   }
 
   @override
@@ -233,14 +184,8 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
         beginNav();
         setOptions();
         var wayPoints = <WayPoint>[];
-        for (WayPoint waypoint in wayPoints) {
-          print(WayPoint);
-        }
-        print("starter");
-        print(wayPoints);
         wayPoints.add(_origin);
         wayPoints.add(_destination);
-        print(wayPoints);
         _routeBuilt = true;
         control.buildRoute(
             wayPoints: wayPoints,
@@ -255,11 +200,7 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     _controller?.dispose();
     control.dispose();
     _controller?.clearRoute();
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context);
-    } else {
-      SystemNavigator.pop();
-    }
+    Navigator.pop(context);
   }
 
   void startNav(MapBoxNavigationViewController control){
@@ -280,81 +221,84 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body:
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        body: Stack(
           children: [
-            Expanded(
-              flex: 4,
-              child: Container(
-                child: MapBoxNavigationView(
-                  options: _navigationOption,
-                  onRouteEvent: _onEmbeddedRouteEvent,
-                  onCreated: (MapBoxNavigationViewController controller) async {
-                    _controller = controller;
-                    controller.initialize();
-                    },
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child:
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width/2,
-                    child:
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      verticalDirection: VerticalDirection.down,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            loadNav(_controller!);
-                          },
-                          child: Text(
-                              "Build Route"
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            exitNav(_controller!);
-                          },
-                          child: const Text("Exit"),
-                        ),
-                      ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    child: MapBoxNavigationView(
+                      options: _navigationOption,
+                      onRouteEvent: _onEmbeddedRouteEvent,
+                      onCreated: (MapBoxNavigationViewController controller) async {
+                        _controller = controller;
+                        controller.initialize();
+                        },
                     ),
                   ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width/2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      verticalDirection: VerticalDirection.down,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            startNav(_controller!);
-                          },
-                          child: const Text("Go"),
+                ),
+                Expanded(
+                  flex: 1,
+                  child:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width/2,
+                        child:
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          verticalDirection: VerticalDirection.down,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                loadNav(_controller!);
+                                },
+                              child: Text(
+                                  "Build Route"
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                exitNav(_controller!);
+                                },
+                              child: const Text("Exit"),
+                            ),
+                          ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            stopNav(_controller!);
-                          },
-                          child: const Text("Stop"),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width/2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          verticalDirection: VerticalDirection.down,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                startNav(_controller!);
+                                },
+                              child: const Text("Go"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                stopNav(_controller!);
+                                },
+                              child: const Text("Stop"),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+        ],
+      ),
       ),
     );
   }
@@ -368,16 +312,11 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
         var progressEvent = e.data as RouteProgressEvent;
         if (progressEvent.currentStepInstruction != null) {
           new_instruction= progressEvent.currentStepInstruction;
-          print(new_instruction);
           if (new_instruction != old_instruction) {
-            // print("BANNER 1");
-            // print(new_instruction);
-            // print(maneuvers[countB]["instruction"]);
             String printer = maneuvers[countB]["instruction"];
             _speak(printer);
             old_instruction = new_instruction;
             countB++;
-            print("countBanner + $countB");
           }
         }
         break;
