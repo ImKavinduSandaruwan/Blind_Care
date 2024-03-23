@@ -1,32 +1,38 @@
 name: CI
+
 on:
   pull_request:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   flutter_test:
     name: Run flutter test and analyze
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
-          channel: "stable"
+          flutter-version: "3.0.0"
+          channel: 'stable'
       - run: flutter pub get
 #      - run: flutter analyze
 #      - run: flutter test
 
   build_ios:
     name: Build Flutter (ios)
-    runs-on: macos_latest
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: "3.0.0"
           channel: 'stable'
       - run: flutter pub get
       - run: flutter test
@@ -34,12 +40,16 @@ jobs:
 
   build_appbundle:
     name: Build Flutter (Android)
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.9'
+          flutter-version: "3.0.0"
+          channel: 'stable'
       - run: flutter pub get
       - run: flutter test
       - run: flutter build apk
