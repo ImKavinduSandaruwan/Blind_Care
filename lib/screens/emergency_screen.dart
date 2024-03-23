@@ -17,6 +17,7 @@ import 'package:projectblindcare/screens/emergency_settings_screen.dart';
 import 'package:projectblindcare/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 
 import '../main.dart';
@@ -73,16 +74,22 @@ class _emergencyFeature extends State<EmergencyScreen> {
                         children: [
                           Text("Emergency handling",style: TextStyle(fontSize: 28,fontFamily:'Arial',fontWeight: FontWeight.bold)),
                           // Text("Want to contact someone?",style: TextStyle(fontSize: 24,fontFamily:'Arial',fontWeight: FontWeight.bold)),
-                          Text("Contact nearest police station",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
-                          ElevatedButton(
-                              onPressed: (){
-                                FlutterPhoneDirectCaller.callNumber('+94703088444');
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
-                              ),
-                              child: Text("Kurunegala police station",style: TextStyle(fontSize: 22,fontFamily:'Arial',fontWeight: FontWeight.bold,color: Color.fromRGBO(89, 89, 89, 1.0))
-                              )
+                          Text("Police station",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
+                          Container(
+                            width: screenWidth*0.9,
+                            child: ElevatedButton(
+                                onPressed: (){
+                                  FlutterPhoneDirectCaller.callNumber('119');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color.fromRGBO(153, 255, 153, 1.0), // Change the button color here
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text("Police station",style: TextStyle(fontSize: 22,fontFamily:'Arial',fontWeight: FontWeight.bold,color: Color.fromRGBO(89, 89, 89, 1.0))
+                                  ),
+                                )
+                            ),
                           )
                         ],
                       ),
@@ -144,7 +151,10 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
                       child: Column(
                         children: [
-                          Text("Contact List",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 18.0),
+                            child: Text("Contact List",style: TextStyle(fontSize: 22,fontFamily:'Arial')),
+                          ),
                           Container(
                             height: screenHeight * 0.35,
                             child: ListView(
@@ -165,12 +175,14 @@ class _emergencyFeature extends State<EmergencyScreen> {
     );
   }
 
-
+  // Define the google map controller
   late GoogleMapController googleMapController;
-
+  // Define the default position and zoom size of the google map
   static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(6.9271, 79.8612), zoom: 14);
-
+  // Create a list for map markers
   Set<Marker> markers = {};
+  // Define the variable for manipulate spinner
+  bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -213,13 +225,16 @@ class _emergencyFeature extends State<EmergencyScreen> {
           ),
         ],
       ),
-      body: GoogleMap(
-        initialCameraPosition:initialCameraPosition,
-        markers: markers,
-        zoomControlsEnabled: false,
-        mapType: MapType.normal, onMapCreated: (GoogleMapController controller){
-        googleMapController = controller;
-      },),
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: GoogleMap(
+          initialCameraPosition:initialCameraPosition,
+          markers: markers,
+          zoomControlsEnabled: false,
+          mapType: MapType.normal, onMapCreated: (GoogleMapController controller){
+          googleMapController = controller;
+        },),
+      ),
       floatingActionButton:
       // Column(
       //   children: [
@@ -238,37 +253,44 @@ class _emergencyFeature extends State<EmergencyScreen> {
 
                     onPressed: () async {
 
+                      setState(() {
+                        // Set showSpinner to true to indicate loading state
+                        showSpinner = true;
+                      });
+
+                      // Set msgOrCall to "msg" to notify user wants send current location
                       msgOrCall = "msg";
 
-                      // if(contactLoaded == false){
-                      //   EmergencyCantactListHandler handler = EmergencyCantactListHandler();
-                      //   // Load contacts
-                      //   List<ContactDataModel> contacts = await handler.loadContacts();
-                      //
-                      //   // Do something with the loaded contacts
-                      //   for (ContactDataModel contact in contacts) {
-                      //     print('Name: ${contact.name}, Phone: ${contact.phoneNumber}');
-                      //     EmergencyCantactListHandler.addDynamicWidget('${contact.name}', '${contact.phoneNumber}');
-                      //   }
-                      //
-                      //   contactLoaded = true;
-                      // }
-
-
+                      // Determine the current position of the device
                       Position position = await _determinePosition();
 
-                      googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude,position.longitude),zoom: 14)));
+                      // Animate the camera to the current position
+                      googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                          target: LatLng(position.latitude, position.longitude),
+                          // Set the target to the current latitude and longitude
+                          zoom: 14))); // Zoom in to level 14
 
+                      // Clear existing markers on the map
                       markers.clear();
 
-                      markers.add(Marker(markerId: const MarkerId("currentLocation"),position: LatLng(position.latitude,position.longitude)));
+                      // Add a marker to represent the current location on the map
+                      markers.add(Marker(
+                        markerId: const MarkerId("currentLocation"), // Unique identifier for the marker
+                        position: LatLng(position.latitude, position.longitude), // Set the position to the current latitude and longitude
+                      ));
 
+                      // Update latitude and longitude variables with current values
                       latitude = position.latitude;
                       longitude = position.longitude;
 
+                      // Show a bottom sheet for current location sharing
                       showBottomSheetForCurrentLocationSharing(context);
 
-                      setState(() {});
+                      setState(() {
+                        // Set showSpinner to false to indicate loading is complete
+                        showSpinner = false;
+                      });
+
 
 
 
@@ -309,34 +331,41 @@ class _emergencyFeature extends State<EmergencyScreen> {
     );
   }
 
+
   Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
+    // If location services are disabled, return an error
     if (!serviceEnabled) {
       return Future.error('Location services are disabled');
     }
 
-    permission = await Geolocator.checkPermission();
+    // Check the permission status for accessing the device's location
+    LocationPermission permission = await Geolocator.checkPermission();
 
+    // If permission is denied, request permission from the user
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
 
+      // If permission is still denied after the request, return an error
       if (permission == LocationPermission.denied) {
         return Future.error("Location permission denied");
       }
     }
 
+    // If permission is permanently denied, return an error
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied');
     }
 
+    // Get the current position of the device
     Position position = await Geolocator.getCurrentPosition();
 
+    // Return the position
     return position;
   }
+
 
 }
 
@@ -344,38 +373,48 @@ class EmergencyCantactListHandler {
 
   late Map<String, dynamic> myMap;
 
+  static Map<String, String> contactsMap = {};
 
   static void addDynamicWidget(String name,String phone) {
+    // Add a new dynamic widget to the list of dynamic widgets
     _emergencyFeature.dynamicWidgets.add(
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
+          // Container to hold the ElevatedButton widget
           child: ElevatedButton(
             style:ElevatedButton.styleFrom(
+              // Set button background color
               backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
             ) ,
             onPressed: () async {
+              // If it's for calling, initiate a phone call
               if(msgOrCall == "call"){
                 FlutterPhoneDirectCaller.callNumber(phone);
+                // If it's for messaging, prepare a message with current location and send it
               }else if(msgOrCall == "msg"){
 
                 final Uri smsLaunchUri = Uri(
                   scheme: 'sms',
                   path: phone,
                   queryParameters: <String, String>{
+                    // Prepare the message body with current location
                     'body': Uri.encodeComponent('Hey $name, I am in emergency situation. This is my current Location: https://maps.google.com/?q=$latitude,$longitude'),
                   },
                 );
-
+                // Check if the device can handle the SMS launch URI
                 if(await canLaunchUrl(smsLaunchUri)){
+                  // If the URI can be launched, launch it
                   await launchUrl(smsLaunchUri);
                 }else{
+                  // If the URI cannot be launched, print a message
                   print("hello hello");
                 }
 
               }
             },
             child: ListTile(
+              // ListTile containing the name and call icon
               leading: Icon(Icons.account_circle),
               title: Text(name),
               trailing: Icon(Icons.call),
@@ -386,6 +425,21 @@ class EmergencyCantactListHandler {
     );
   }
 
+  static Future<void> sendMsg(name, phone) async {
+    final Uri smsLaunchUri = Uri(
+      scheme: 'sms',
+      path: phone,
+      queryParameters: <String, String>{
+        'body': Uri.encodeComponent('Hey $name, I am in emergency situation. This is my current Location: https://maps.google.com/?q=$latitude,$longitude'),
+      },
+    );
+
+    if(await canLaunchUrl(smsLaunchUri)){
+      await launchUrl(smsLaunchUri);
+    }else{
+      print("hello hello");
+    }
+  }
 
   static Future<void> saveMap(String key, Map map) async {
     final prefs = await SharedPreferences.getInstance();
