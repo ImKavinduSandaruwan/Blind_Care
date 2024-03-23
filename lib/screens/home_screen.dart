@@ -7,6 +7,7 @@ import 'package:projectblindcare/constants/constant.dart';
 import 'package:projectblindcare/screens/object_detection.dart';
 import 'package:projectblindcare/components/reuseble_FunctionCard.dart';
 import 'package:alan_voice/alan_voice.dart';
+import 'package:projectblindcare/screens/poi.dart';
 import 'customer_support.dart';
 import 'emergency_screen.dart';
 import 'navigation_maps.dart';
@@ -152,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Expanded(
                               child: Image(
                                 width: screenWidth,
-                                image: const Svg('images/blind.svg'),
+                                image: AssetImage("images/blind.png"),
                               ),
                             ),
                             const SizedBox(
@@ -174,11 +175,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: Row(
                         children: [
-                          FunctionCard("images/map.svg","Blind Map",(){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => mapPage()));
+                          FunctionCard("images/map.png","Blind Map",(){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LocationMap()));
                           }),
-                          FunctionCard("images/transport.svg","Transport",(){
-                            /// Add navigation route for transport page
+                          FunctionCard("images/poi.png","Place Of Interests",(){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOfInterests()));
                           }),
                         ],
                       ),
@@ -186,11 +187,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: Row(
                         children: [
-                          FunctionCard("images/emergency.svg","Emergency",(){
+                          FunctionCard("images/emergency.png","Emergency",(){
                             Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                             /// Add navigation route for emergency page
                           }),
-                          FunctionCard("images/service.svg","Help Center",(){
+                          FunctionCard("images/service.png","Help Center",(){
                             Navigator.push(context, MaterialPageRoute(builder: (context) => CustomerService()));
                             /// Add navigation route for help center page
                           }),

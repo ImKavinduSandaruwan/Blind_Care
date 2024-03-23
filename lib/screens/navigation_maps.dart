@@ -21,20 +21,6 @@ import '../constants/constant.dart';
 
 import 'package:alan_voice/alan_voice.dart';
 
-void main(){
-  runApp(mapPage());
-}
-
-class mapPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'NavMaps',
-      home: LocationMap(),
-    );
-  }
-}
-
 class LocationMap extends StatefulWidget {
   @override
   State<LocationMap> createState() => _LocationMapState();

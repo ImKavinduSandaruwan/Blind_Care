@@ -88,7 +88,7 @@ class ScanController extends GetxController{
     );
     if(detector != null){
       print("😂😂😂😂😂😂😂 $detector");
-      detectionResult.value = detector.toString();
+      detectionResult.value = detector[0]['label'];
       print(detectionResult.value);
       await _speak(detectionResult.value);
 
