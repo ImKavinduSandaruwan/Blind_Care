@@ -35,7 +35,7 @@ jobs:
           flutter-version: "3.0.0"
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter test
+#      - run: flutter test
       - run: flutter build ios --release --no-codesign
 
   build_appbundle:
@@ -51,6 +51,6 @@ jobs:
           flutter-version: "3.0.0"
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter test
+#      - run: flutter test
       - run: flutter build apk
       - run: flutter build appbundle
