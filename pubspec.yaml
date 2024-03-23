@@ -1,76 +1,68 @@
-name: projectblindcare
-description: A new Flutter project.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+name: CI
 
-version: 1.0.0+1
-environment:
-  sdk: '>=3.1.3 <4.0.0'
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
 
-dependencies:
-  flutter:
-    sdk: flutter
-
-  cupertino_icons: ^1.0.2
-  flutter_svg_provider: ^1.0.4
-  curved_navigation_bar: ^1.0.3
-  camera: ^0.10.5+9
-  flutter_phone_direct_caller: ^2.1.1
-  google_maps_flutter: ^2.5.3
-  location: ^5.0.3
-  geolocator: ^11.0.0
-  geocoding: ^2.1.1
-  url_launcher: ^6.2.4
-  permission_handler: ^11.2.0
-  path_provider: ^2.1.2
-  firebase_core: ^2.25.4
-  google_sign_in: ^6.2.1
-  firebase_auth: ^4.17.4
-  google_sign_in_ios: ^5.7.4
-  cloud_firestore: ^4.15.4
-  shared_preferences: ^2.2.2
-  get: ^4.6.6
-  image: ^3.3.0
-  flutter_tflite: ^1.0.1
-  flutter_tts: ^3.8.5
-  google_place: ^0.4.7
-  flutter_polyline_points: ^1.0.0
-  latlong2: ^0.9.0
-  alan_voice: ^4.5.0
-  http: ^0.13.6
-  modal_progress_hud_nsn: ^0.5.1
-
-
-  speech_to_text: ^6.6.0
-
-
-  flutter_mapbox_navigation:
-    git:
-      url: https://github.com/eopeter/flutter_mapbox_navigation.git
-      ref: master
-
-
-dev_dependencies:
+jobs:
   flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.1
-flutter:
-  uses-material-design: true
-  assets:
-    - images/
-    - contactStorage/
-    - assets/
+    name: Run flutter test and analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.0.0"
+          channel: 'stable'
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 'stable'
+          version: '3.1.3'
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
 
-  fonts:
-    - family: Poppins
-      fonts:
-        - asset: fonts/Poppins-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+  build_ios:
+    name: Build Flutter (ios)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.0.0"
+          channel: 'stable'
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 'stable'
+          version: '3.1.3'
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build ios --release --no-codesign
+
+  build_appbundle:
+    name: Build Flutter (Android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.0.0"
+          channel: 'stable'
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 'stable'
+          version: '3.1.3'
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk
+      - run: flutter build appbundle
