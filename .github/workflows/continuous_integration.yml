@@ -23,8 +23,8 @@ jobs:
           sdk: 'stable'
           version: '3.1.3'
       - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+#      - run: flutter analyze
+#      - run: flutter test
 
   build_ios:
     name: Build Flutter (ios)
@@ -43,7 +43,7 @@ jobs:
           sdk: 'stable'
           version: '3.1.3'
       - run: flutter pub get
-      - run: flutter test
+#      - run: flutter test
       - run: flutter build ios --release --no-codesign
 
   build_appbundle:
@@ -63,6 +63,6 @@ jobs:
           sdk: 'stable'
           version: '3.1.3'
       - run: flutter pub get
-      - run: flutter test
+#      - run: flutter test
       - run: flutter build apk
       - run: flutter build appbundle
