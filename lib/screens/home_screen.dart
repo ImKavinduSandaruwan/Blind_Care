@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           FunctionCard("images/map.svg","Blind Map",(){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => mapPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LocationMap()));
                           }),
                           FunctionCard("images/transport.svg","Transport",(){
                             /// Add navigation route for transport page
