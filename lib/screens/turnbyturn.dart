@@ -208,6 +208,7 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     if (!mounted) return;
     _navigationOption = MapBoxNavigation.instance.getDefaultOptions();
     MapBoxNavigation.instance.registerRouteEventListener(_onEmbeddedRouteEvent);
+    _navigationOption.voiceInstructionsEnabled = false;
     String? platformVersion;
     try {
       platformVersion = await MapBoxNavigation.instance.getPlatformVersion();
@@ -322,7 +323,7 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
                           onPressed: () {
                             exitNav(_controller!);
                           },
-                          child: const Text("RunDirections"),
+                          child: const Text("Exit"),
                         ),
                       ],
                     ),
