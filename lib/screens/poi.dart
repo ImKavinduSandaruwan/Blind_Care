@@ -1,4 +1,3 @@
-import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,6 +23,7 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
     _locationFuture = getCurrentLocation();
   }
 
+  ///This method is responsible for getting users current location
   Future<Position> getCurrentLocation() async {
     try {
       currentPosition = await Geolocator.getCurrentPosition(
