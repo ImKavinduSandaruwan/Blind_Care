@@ -9,9 +9,7 @@ class AuthService{
 
   //Google sign in
   signInWithGoogle() async{
-    //begin interactive sign in process
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-    // obtain auth details from request
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
     // create a new credential for user
     final credential = GoogleAuthProvider.credential(
