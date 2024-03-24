@@ -55,6 +55,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>MBXAccessToken</key>
+        <string>pk.eyJ1IjoiaW5mYXMyMyIsImEiOiJjbHNyb3ZoZ2MwbnVyMm5xa2RvOThvMjV6In0.5ea4tHHmPR1m33ZAheAJXQ</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
