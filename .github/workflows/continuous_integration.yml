@@ -57,4 +57,4 @@ jobs:
         with:
           artifacts: "build/app/output/apk/release/*"
           tag: v0.0.1
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
