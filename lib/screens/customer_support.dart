@@ -16,6 +16,8 @@ class CustomerService extends StatefulWidget {
 
 class _CustomerServiceState extends State<CustomerService> {
 
+  final TextEditingController _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,34 @@ class _CustomerServiceState extends State<CustomerService> {
           ],
         ),
         backgroundColor: mainThemeColor,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              child: Image(
+                width: 300,
+                height: 300,
+                image: AssetImage('images/service.png'),
+              ),
+            ),
+            TextField(
+              controller: _textController,
+              decoration: InputDecoration(
+                hintText: 'Send Feedback',
+                border: OutlineInputBorder(),
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    _textController.clear(); // Correctly using a function here
+                  },
+                  child: Icon(Icons.clear),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
