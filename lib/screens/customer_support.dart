@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
 
+import '../components/auth_service.dart';
 import '../components/square_tile.dart';
-import '../services/auth_service.dart';
 
 class CustomerService extends StatefulWidget {
   const CustomerService({super.key});
@@ -16,121 +14,101 @@ class CustomerService extends StatefulWidget {
 
 class _CustomerServiceState extends State<CustomerService> {
 
-
-  void sendDataToFirestore() {
-    FirebaseFirestore.instance.collection('ginura testing1').add({
-      'text': 'data added',
-    });
-  }
+  final TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mainThemeColor,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Help Desk"),
-            Icon(Icons.support_agent_sharp),
+            Row(
+              children: [
+                Icon(Icons.arrow_back_sharp),
+                SizedBox(width: 10,),
+                Text("Customer Support"),
+              ],
+            ),
+            Icon(Icons.support_agent_sharp)
+          ],
+        ),
+        backgroundColor: mainThemeColor,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //Container that contains image of the screen
+            Container(
+              child: Image(
+                width: 300,
+                height: 300,
+                image: AssetImage('images/service.png'),
+              ),
+            ),
+
+            //Text field for getting user inputs
+            TextField(
+              controller: _textController,
+              decoration: InputDecoration(
+                hintText: 'Send Feedback',
+                border: OutlineInputBorder(),
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    _textController.clear(); // Correctly using a function here
+                  },
+                  child: Icon(Icons.clear),
+                ),
+              ),
+            ),
+
+            //Rating bar
+            RatingBar.builder(
+              initialRating: 3.5,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+
+              },
+            ),
+
+            //Submit Button
+            MaterialButton(
+              onPressed:() {},
+              color: Colors.blue,
+              child: Text('Send', style: TextStyle(color: Colors.white)),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //google button
+                SquareTile(
+                    imagePath:'images/google.png',
+                    onTap: AuthService().signInWithGoogle
+                ),
+
+                SizedBox(width: 10,),
+
+                //Apple button
+                SquareTile(
+                    imagePath: 'images/apple.png',
+                    onTap: AuthService().signInWithApple
+                ),
+              ],
+            )
           ],
         ),
       ),
-      backgroundColor: const Color(0xffF2FEFE),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //TODO: Implement other functionalities
-          Expanded(
-            flex: 1,
-            child: GestureDetector(
-              onTap: sendDataToFirestore,
-              child: Container(
-                width: 200,
-                height: 200,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  ///Getting touch with us
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            thickness: 2.0,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("Getting Touch With Us"),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            thickness: 2.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-
-                  ///Google and Apple sign in Buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ///Google Button
-                      Expanded(
-                        child: SquareTile(
-                          imagePath: "images/google.png",
-                          onTap: () async {
-                            await AuthService().signWithGoogleAccount();
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 20,),
-                      ///Apple Button
-                      //TODO : Need to implement Apple sign in function
-                      Expanded(
-                        child: SquareTile(
-                          imagePath: "images/apple.png",
-                          onTap: (){},
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
-
-
-  signInWithGoogle() async {
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken
-    );
-
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-    print(userCredential.user?.displayName);
-
-
-  }
-
 }
