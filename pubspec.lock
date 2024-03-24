@@ -313,11 +313,10 @@ packages:
   flutter_mapbox_navigation:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "83325fdad56d278f75ea2a68640f456d3a1ce5ac"
-      url: "https://github.com/eopeter/flutter_mapbox_navigation.git"
-    source: git
+      name: flutter_mapbox_navigation
+      sha256: "623c0331d4b29ec884044baaf23735cc2ef777acc8292abfa11d5e0c7d8491ba"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.2.2"
   flutter_phone_direct_caller:
     dependency: "direct main"

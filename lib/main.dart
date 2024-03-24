@@ -19,13 +19,6 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // List<Person> allPeople = await Person.loadPeople();
-  // allPeople.forEach((person) {
-  //   print('Name: ${person.name}, Phone Number: ${person.phoneNumber}');
-  //   EmergencyCantactListHandler.addDynamicWidget('${person.name}', '${person.phoneNumber}');
-  //   EmergencySettingsScreenState.addedSavedContact('${person.name}','${person.phoneNumber}');
-  // });
-
   List<Map<String, dynamic>> contacts = await EmergencyCantactListHandler.fetchDataFromFirestore();
   contacts.forEach((contact) {
     EmergencyCantactListHandler.addDynamicWidget('${contact['name']}', '${contact['phone']}');
@@ -33,14 +26,11 @@ Future<void> main() async {
     EmergencyCantactListHandler.contactsMap[contact['name']] = contact['phone'];
   });
 
-
   runApp(const BlindCareApp());
 }
 
 class BlindCareApp extends StatelessWidget {
-
   const BlindCareApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
