@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
 
+import '../components/auth_service.dart';
 import '../components/square_tile.dart';
-import '../services/auth_service.dart';
 
 class CustomerService extends StatefulWidget {
   const CustomerService({super.key});
@@ -42,6 +40,7 @@ class _CustomerServiceState extends State<CustomerService> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            //Container that contains image of the screen
             Container(
               child: Image(
                 width: 300,
@@ -49,6 +48,8 @@ class _CustomerServiceState extends State<CustomerService> {
                 image: AssetImage('images/service.png'),
               ),
             ),
+
+            //Text field for getting user inputs
             TextField(
               controller: _textController,
               decoration: InputDecoration(
@@ -62,6 +63,49 @@ class _CustomerServiceState extends State<CustomerService> {
                 ),
               ),
             ),
+
+            //Rating bar
+            RatingBar.builder(
+              initialRating: 3.5,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+
+              },
+            ),
+
+            //Submit Button
+            MaterialButton(
+              onPressed:() {},
+              color: Colors.blue,
+              child: Text('Send', style: TextStyle(color: Colors.white)),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //google button
+                SquareTile(
+                    imagePath:'images/google.png',
+                    onTap: AuthService().signInWithGoogle
+                ),
+
+                SizedBox(width: 10,),
+
+                //Apple button
+                SquareTile(
+                    imagePath: 'images/apple.png',
+                    onTap: AuthService().signInWithApple
+                ),
+              ],
+            )
           ],
         ),
       ),
