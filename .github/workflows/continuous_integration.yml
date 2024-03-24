@@ -52,9 +52,9 @@ jobs:
       - run: flutter build apk
       - run: flutter build appbundle
 
-      - name: Push to releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/output/apk/release/*"
-          tag: v0.0.1
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+#      - name: Push to releases
+#        uses: ncipollo/release-action@v1
+#        with:
+#          artifacts: "build/app/output/apk/release/*"
+#          tag: v0.0.1
+#          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
