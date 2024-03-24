@@ -1,24 +1,33 @@
 import 'dart:io';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
-
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:projectblindcare/screens/turnbyturn.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:projectblindcare/components/camera_view.dart';
 import '../components/scan_controller.dart';
 import '../constants/constant.dart';
-
 import 'package:alan_voice/alan_voice.dart';
-
 import 'package:flutter_tts/flutter_tts.dart';
+
+void main(){
+  runApp(mapPage());
+}
+
+class mapPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'NavMaps',
+      home: LocationMap(),
+    );
+  }
+}
 
 class LocationMap extends StatefulWidget {
   @override
@@ -57,7 +66,7 @@ class _LocationMapState extends State<LocationMap> {
   void initState(){
     super.initState();
     _requestLocationPermission();
-    apiKey = 'AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo';
+    apiKey = 'AIzaSyALmRQFrUjSDzXK4TgxPM6iBvnfU6wfhuc';
     googlePlace = GooglePlace(apiKey);
     endFocusNode = FocusNode();
     _navReady = false;
@@ -84,7 +93,7 @@ class _LocationMapState extends State<LocationMap> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String apiKey = "AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo";
+  String apiKey = "AIzaSyALmRQFrUjSDzXK4TgxPM6iBvnfU6wfhuc";
   bool _navReady = false;
   String _lastWords = '';
   String _numValue = '';
@@ -253,10 +262,10 @@ class _LocationMapState extends State<LocationMap> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextButton(
-                    onPressed: () {
-                      _requestLocationPermission();
-                      _setDestination();
-                      _getPolyline();
+                    onPressed: () async {
+                      // _requestLocationPermission();
+                      // _setDestination();
+                      // _getPolyline();
                     },
                     child: Text('Start', style: TextStyle(color: Colors.white)),
                   ),
@@ -297,6 +306,8 @@ class _LocationMapState extends State<LocationMap> {
         value,
         region: "LK",
     );
+    print("runner");
+    print(result?.predictions);
     if(result != null && result.predictions != null && mounted){
       setState(() {
         predictions = result.predictions!;
