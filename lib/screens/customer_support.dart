@@ -1,3 +1,4 @@
+import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
@@ -15,6 +16,25 @@ class CustomerService extends StatefulWidget {
 class _CustomerServiceState extends State<CustomerService> {
 
   final TextEditingController _textController = TextEditingController();
+
+  ///Implementing alan AI
+  _CustomerServiceState() {
+    AlanVoice.addButton("72c64715b451423bf6ac4a0ab4e8c0ba2e956eca572e1d8b807a3e2338fdd0dc/stage");
+    AlanVoice.onCommand.add((command) => _handleCommand(command.data));
+  }
+
+  void _handleCommand(Map<String, dynamic> command) {
+    switch(command["command"]) {
+      case "getMsg":
+        break;
+  }
+
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
