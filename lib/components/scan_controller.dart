@@ -50,8 +50,8 @@ class ScanController extends GetxController{
 
   initTlLite() async {
     await Tflite.loadModel(
-        model: "assets/mobilenet_v1_1.0_224.tflite",
-        labels: "assets/mobilenet_v1_1.0_224.txt",
+        model: "assets/blind-care.tflite",
+        labels: "assets/blind-care.txt",
         numThreads: 1,
         isAsset: true,
         useGpuDelegate: false

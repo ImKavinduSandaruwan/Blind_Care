@@ -1,0 +1,3 @@
+0 PothHole
+1 TrashCans
+2 Others
