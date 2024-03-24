@@ -8,7 +8,6 @@ import 'package:camera/camera.dart';
 
 ///////////////////////////////////
 
-void main() => runApp(ObjectDetectionApp()); // Call runApp with our app class
 
 class ObjectDetectionApp extends StatelessWidget {
   @override

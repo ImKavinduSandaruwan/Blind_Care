@@ -40,12 +40,6 @@ class _CustomerServiceState extends State<CustomerService> {
         ),
       ),
       backgroundColor: const Color(0xffF2FEFE),
-      bottomNavigationBar: CurvedNavigationBar(
-        items: const [Icon(Icons.keyboard_voice_rounded)],
-        color: mainThemeColor,
-        backgroundColor: Colors.white,
-        height: 60,
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
