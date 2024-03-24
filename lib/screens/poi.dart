@@ -13,20 +13,18 @@ class PlaceOfInterests extends StatefulWidget {
 
 class _PlaceOfInterestsState extends State<PlaceOfInterests> {
 
-  ///Attributes that store current location, latitude and longitude values
   late Position currentPosition;
   late double lat;
   late double lon;
+  Future<Position>? _locationFuture;
 
   @override
   void initState() {
     super.initState();
-    getCurrentLocation();
+    _locationFuture = getCurrentLocation();
   }
 
-  /// This method is responsible for getting users current
-  /// latitude and longitude values in low accuracy
-  Future<void> getCurrentLocation() async {
+  Future<Position> getCurrentLocation() async {
     try {
       currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.low,
@@ -34,15 +32,11 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
       );
       lat = currentPosition.latitude;
       lon = currentPosition.longitude;
-      print('lat:- $lat and lon:- $lon');
+      fetchNearbyPharmaciesAndHotel(lat, lon);
+      return currentPosition;
     } catch (e) {
       print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error getting location: $e'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      throw Exception('Failed to get location');
     }
   }
 
@@ -134,11 +128,13 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
         backgroundColor: mainThemeColor,
         title: Text("Place Of Interests"),
       ),
-      body: SafeArea(
-        child: FutureBuilder(
-          future: getCurrentLocation(), // This is the future you're waiting for
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+      body: FutureBuilder<Position>(
+        future: _locationFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              lat = snapshot.data!.latitude;
+              lon = snapshot.data!.longitude;
               return Stack(
                 children: [
                   GoogleMapScreen(latitude: lat, longitude: lon),
@@ -146,7 +142,7 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
                     bottom: 0,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set the background color,
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                         backgroundColor: MaterialStateProperty.all<Color>(mainThemeColor),
                       ),
                       onPressed: () {
@@ -158,15 +154,15 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
                 ],
               );
             } else {
-              // While waiting for the future to complete, show a loading indicator
-              return Center(child: CircularProgressIndicator());
+              return Center(child: Text('Failed to get location'));
             }
-          },
-        ),
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
   }
-
 }
 
 class GoogleMapScreen extends StatefulWidget {

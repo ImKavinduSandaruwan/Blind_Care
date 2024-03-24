@@ -1,10 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
-import 'package:projectblindcare/screens/object_detection.dart';
 import 'package:projectblindcare/components/reuseble_FunctionCard.dart';
 import 'package:alan_voice/alan_voice.dart';
 import 'package:projectblindcare/screens/poi.dart';
@@ -23,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ///Implementing alan AI
   _HomeScreenState() {
-    AlanVoice.addButton("297ec570615d4f747742b6798d22577d2e956eca572e1d8b807a3e2338fdd0dc/stage");
+    AlanVoice.addButton("72c64715b451423bf6ac4a0ab4e8c0ba2e956eca572e1d8b807a3e2338fdd0dc/stage");
     AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
 
@@ -35,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
       case "call contacts":
         var NAME = command["text"];
         print('name name $NAME');
-
         if (EmergencyCantactListHandler.contactsMap.containsKey(NAME)) {
           String? NAMEphone = EmergencyCantactListHandler.contactsMap[NAME];
           print(NAMEphone);
@@ -44,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
           print("Key does not exist in the map.");
         }
         break;
-
       case "location":
         var NAMEMSG = command["text"];
         print('name name $NAMEMSG');
@@ -56,13 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
           EmergencyCantactListHandler.sendMsg(NAMEMSG, NAMEmsg);
         }
         break;
+      case "poi":
+        executePoi();
+        break;
     }
 
   }
 
-  ///Navigating to the Blind Map
-  void navigateToTheMap(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ObjectDetection()));
+  ///Navigating to the place of interest screen
+  void executePoi(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOfInterests()));
   }
 
   @override
