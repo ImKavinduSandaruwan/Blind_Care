@@ -1,4 +1,5 @@
 import 'package:alan_voice/alan_voice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:projectblindcare/constants/constant.dart';
@@ -24,9 +25,25 @@ class _CustomerServiceState extends State<CustomerService> {
   }
 
   void _handleCommand(Map<String, dynamic> command) {
-    switch(command["command"]) {
+    switch (command["command"]) {
       case "getMsg":
+        _textController.text = command["text"];
+        sendDataToTheFireStore();
         break;
+    }
+  }
+
+  void sendDataToTheFireStore() async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+
+    // Prepare the data to be stored
+    Map<String, dynamic> data = {
+      'message': _textController.text,
+    };
+
+    await fireStore.collection('messages').add(data)
+        .then((value) => print("Message Added"))
+        .catchError((error) => print("Failed to add message: $error"));
   }
 
 
@@ -103,7 +120,9 @@ class _CustomerServiceState extends State<CustomerService> {
 
             //Submit Button
             MaterialButton(
-              onPressed:() {},
+              onPressed:() {
+                sendDataToTheFireStore();
+              },
               color: Colors.blue,
               child: Text('Send', style: TextStyle(color: Colors.white)),
             ),
