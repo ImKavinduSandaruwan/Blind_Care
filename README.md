@@ -9,7 +9,7 @@ A Machine Learning based mobile application
 - [@Malshi Sathsarani](https://github.com/malshisathsarani)
 - [@Yohani Gankanda](https://github.com/YohaniGankanda)
 - [@Ginura Premawardana](https://github.com/)
-- [@Infas Iqbal](https://github.com/)
+- [@Infas Iqbal](https://github.com/IqbalInfasIIT/)
 
 
 ## Badges

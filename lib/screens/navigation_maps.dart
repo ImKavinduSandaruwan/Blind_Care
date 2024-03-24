@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_place/google_place.dart';
@@ -20,6 +17,8 @@ import '../components/scan_controller.dart';
 import '../constants/constant.dart';
 
 import 'package:alan_voice/alan_voice.dart';
+
+import 'package:flutter_tts/flutter_tts.dart';
 
 class LocationMap extends StatefulWidget {
   @override
@@ -41,12 +40,10 @@ class _LocationMapState extends State<LocationMap> {
   Future<void> _handleCommand(Map<String, dynamic> command) async {
     switch(command["command"]) {
       case "getPlace":
-        print("runstart");
         _destinationController.clear();
         _destinationController.text = command["text"];
         _lastWords = _destinationController.text;
         startProcessSubOne();
-        print("run complete");
         break;
       case "getSelect":
         _numberSelect = true;
@@ -57,20 +54,12 @@ class _LocationMapState extends State<LocationMap> {
         debugPrint("Unknown command");
     }
   }
-
-  /*void runAlan(){
-    AlanVoice.addButton("689e5df914105717e09b84ae8ac4018d2e956eca572e1d8b807a3e2338fdd0dc/stage");
-    AlanVoice.playCommand("active now");
-    AlanVoice.playCommand("command");
-
-    AlanVoice.onCommand.add((command) {
-      debugPrint("got new command ${command.toString()}");
-    });
-  }*/
-
   @override
   void initState(){
     super.initState();
+    ever(scanController.detectionResult, (dynamic _) {
+      _speak(scanController.detectionResult.value);
+    });
     _requestLocationPermission();
     apiKey = 'AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo';
     googlePlace = GooglePlace(apiKey);
@@ -103,6 +92,20 @@ class _LocationMapState extends State<LocationMap> {
   bool _predictionsRead = false;
   bool _numberSelect = false;
 
+  final FlutterTts _flutterTts = FlutterTts();
+
+  ScanController scanController = ScanController();
+
+  void initTts() async {
+    await _flutterTts.setLanguage("en-US");
+    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.awaitSpeakCompletion(true);
+  }
+  _speak(String textSpeech) async {
+    await _flutterTts.speak(textSpeech);
+    await _flutterTts.awaitSpeakCompletion(true);
+  }
+
   int? _getNumValue(){
     try {
       return int.parse(_numberController.text)-1;
@@ -111,9 +114,6 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  startProcessMain(){
-    print("error");
-  }
   startProcessSubOne() async {
     _enterDestination();
     await Future.delayed(Duration(seconds: 5));
@@ -133,14 +133,9 @@ class _LocationMapState extends State<LocationMap> {
   }
 
   _enterDestination() async {
-    print("_enterDestination");
-
     predictions.clear();
     _lastWords = _destinationController.text;
-    print(_lastWords);
     autoCompleteSearch(_lastWords);
-
-    print("_enterDestination");
     _predictionsRead = false;
     _numberSelect = false;
   }
@@ -151,6 +146,7 @@ class _LocationMapState extends State<LocationMap> {
     endFocusNode.dispose();
     _destinationController.dispose();
     _numberController.dispose();
+    scanController.dispose();
   }
 
   @override
@@ -211,7 +207,6 @@ class _LocationMapState extends State<LocationMap> {
                           :null),
                     onChanged: (value) {
                     if (value.isNotEmpty) {
-                      print(value);
                       autoCompleteSearch(value);
                     } else {
                       setState(() {
@@ -276,7 +271,7 @@ class _LocationMapState extends State<LocationMap> {
           ),
           Positioned(
             left: 5,
-            top: MediaQuery.sizeOf(context).height / 4,
+            top: MediaQuery.sizeOf(context).height / 5,
             child: Column(
               children: [
                 Container(
@@ -285,10 +280,10 @@ class _LocationMapState extends State<LocationMap> {
                     child: CameraView()
                     ),
                 Container(
-                    width: 100,
-                    height: 100,
+                    width: MediaQuery.sizeOf(context).width/3,
+                    height: MediaQuery.sizeOf(context).height/7,
                     child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))
-                    ),
+                ),
               ],
             ),
           )
@@ -296,7 +291,13 @@ class _LocationMapState extends State<LocationMap> {
       ),
     );
   }
-
+  objSpeech() {
+    var detectedText = Get.find<ScanController>().detectionResult.value;
+    print("runner");
+    print(detectedText);
+    _speak(detectedText);
+    return Text(detectedText);
+  }
   void autoCompleteSearch(String value) async{
     var result = await googlePlace.autocomplete.get(
         value,
@@ -313,8 +314,6 @@ class _LocationMapState extends State<LocationMap> {
     if (_predictionsRead){
       return null;
     }
-    print("_readPredictions");
-    print(predictions);
     if (predictions.isNotEmpty) {
       for (int i = 0; i < predictions.length; i++) {
         int x = i + 1;
@@ -322,19 +321,15 @@ class _LocationMapState extends State<LocationMap> {
         AlanVoice.playText(num);
         String placePredictions = predictions[i].description.toString();
         AlanVoice.playText(placePredictions);
-
         _predictionsRead = true;
-        print(placePredictions);
       }
     }
-    print("_readPredictions");
   }
 
   Future<void> _selectLocation() async {
     if (_numberSelect){
       return null;
     }
-    print("_selectLocation");
     if (predictions.isEmpty){
       return null;
     }
@@ -343,40 +338,23 @@ class _LocationMapState extends State<LocationMap> {
 
     _numValue = '';
     _numValue = _numberController.text;
-    print(_numberController.text);
-    print(_numValue);
     _numberSelect = true;
-    print("_selectLocation");
   }
 
   _setData() async {
-    print("_setData");
-
     AlanVoice.playText(_numValue);
-
-    print("your number is "+ _numberController.text);
-
     int? num = _getNumValue();
-    print(num);
     try{
       if (num!<0 || num>= predictions.length) {
         _navReady = false;
-        print("BREAK 1");
-        startProcessMain();
         return null;
       }
-      print("BREAK 2");
       final placeId = predictions[num].placeId!;
       final details = await googlePlace.details.get(placeId);
-      print(details);
-      print(details?.result);
       if (details != null && details.result != null) {
-        print("BREAK 3");
         setState(() {
           endPosition = details.result;
           _destinationController.text = details.result!.name!;
-
-          print(_numberController.text + _destinationController.text);
           String finalPlace = _numberController.text+_destinationController.text;
           AlanVoice.playText(finalPlace);
           predictions = [];
@@ -384,14 +362,11 @@ class _LocationMapState extends State<LocationMap> {
         });
       } else {
         _navReady = false;
-        startProcessMain();
       }
     }
     catch (e){
       _navReady = false;
-      startProcessMain();
     }
-    print("_setData");
   }
 
   void _onMapCreated(GoogleMapController controller){
@@ -417,7 +392,7 @@ class _LocationMapState extends State<LocationMap> {
       });
     }
     catch (e){
-      print('Error getting current location: $e');
+      debugPrint('$e');
     }
   }
 
@@ -428,20 +403,18 @@ class _LocationMapState extends State<LocationMap> {
     } else if (status == PermissionStatus.permanentlyDenied) {
       openAppSettings();
     } else {
-      print('error');
+      debugPrint('error');
     }
   }
 
   void openAppSettings() async {
-    // Use the appropriate URI/intent based on the platform (Android/iOS)
     final url = Platform.isAndroid
         ? 'package:com.android.settings'
         : 'app-settings://';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(url as Uri);
     } else {
-      // Handle the case where the URL cannot be launched
-      print('Could not launch app settings');
+      debugPrint('error');
     }
   }
 
