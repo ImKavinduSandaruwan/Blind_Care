@@ -6,8 +6,6 @@ import '../components/scan_controller.dart';
 import '../constants/constant.dart';
 import 'package:camera/camera.dart';
 
-void main() => runApp(ObjectDetectionApp()); // Call runApp with our app class
-
 class ObjectDetectionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

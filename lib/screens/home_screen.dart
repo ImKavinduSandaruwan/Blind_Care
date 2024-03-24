@@ -71,14 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color(0xffF2FEFE),
-      bottomNavigationBar: CurvedNavigationBar(
-        items: const [
-          Icon(Icons.keyboard_voice_rounded)
-        ],
-        color: mainThemeColor,
-        backgroundColor: Colors.white,
-        height: 60,
-      ),
       body: Container(
         child: Column(
           children: [

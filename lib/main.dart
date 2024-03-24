@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projectblindcare/screens/emergency_screen.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
+import 'package:projectblindcare/screens/poi.dart';
 import 'package:projectblindcare/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -42,7 +43,7 @@ class BlindCareApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );

@@ -191,12 +191,6 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xffF2FEFE),
-      bottomNavigationBar: CurvedNavigationBar(
-        items: const [Icon(Icons.keyboard_voice_rounded)],
-        color: mainThemeColor,
-        backgroundColor: Colors.transparent,
-        height: 60,
-      ),
       appBar: AppBar(
         backgroundColor: mainThemeColor,
         title: const Text(
