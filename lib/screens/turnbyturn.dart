@@ -1,17 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mapbox_navigation/flutter_mapbox_navigation.dart';
-
 import 'package:alan_voice/alan_voice.dart';
-
 import 'package:flutter_tts/flutter_tts.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:projectblindcare/components/camera_view.dart';
+import '../components/scan_controller.dart';
 
 /*void main(){
   runApp(
@@ -50,7 +49,6 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     _flutterTts.setPitch(1.0);
     _flutterTts.setSpeechRate(0.5);
   }
-
   void _handleCommand(Map<String, dynamic> command) {
     switch(command["command"]) {
       case "build":
@@ -70,7 +68,47 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     }
   }
 
+  late WayPoint _origin, _destination;
+  String? _platformVersion;
+  String? new_instruction;
+  String? old_instruction;
+  var countB = 0;
+  double? _distanceRemaining, _durationRemaining;
+  MapBoxNavigationViewController? _controller;
+  bool _routeBuilt = false;
+  bool _isNavigating = false;
+  late MapBoxOptions _navigationOption;
+  final FlutterTts _flutterTts = FlutterTts();
+  ScanController scanController = ScanController();
+  var detectedText;
+  Future<bool> _checkIsActive() async {
+    var isActive = await AlanVoice.isActive();
+    if (isActive) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    initialize();
+  }
+  @override
+  void dispose() {
+    _controller?.dispose();
+    scanController.dispose();
+    super.dispose();
+  }
+  _speak(String textSpeech) async {
+    if (await _checkIsActive() == false) {
+      if(!textSpeech.toLowerCase().contains("others")){
+        await _flutterTts.speak(textSpeech);
+        await _flutterTts.awaitSpeakCompletion(true);
+      }
+    }
+  }
   void getDirections(double startLat, double startLng, double endLat, double endLng) async {
     String accessToken = 'sk.eyJ1IjoiaW5mYXMyMyIsImEiOiJjbHN1Z2c0ZDgyMGNkMmlwczlreWY0ZTlpIn0.oHcETcNQLDrnB2cO-wQkCA';
     String url = 'https://api.mapbox.com/directions/v5/mapbox/walking/'
@@ -102,59 +140,20 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     }
     return maneuvers;
   }
-
-  late WayPoint _origin, _destination;
-
-  String? _platformVersion;
-  String? new_instruction;
-  String? old_instruction;
-
-  var countB = 0;
-
-  double? _distanceRemaining, _durationRemaining;
-  MapBoxNavigationViewController? _controller;
-  bool _routeBuilt = false;
-  bool _isNavigating = false;
-  late MapBoxOptions _navigationOption;
-
-  final FlutterTts _flutterTts = FlutterTts();
-  bool _isSpeaking = false;
-
-  _speak(String Text) async {
-      setState(() => _isSpeaking = true);
-      await _flutterTts.setLanguage('en-US');
-      await _flutterTts.speak(Text);
-      setState(() => _isSpeaking = false);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initialize();
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
   void setOptions() {
     _navigationOption.bannerInstructionsEnabled = true;
     _navigationOption.language = "en";
     _navigationOption.mode = MapBoxNavigationMode.walking;
-    _navigationOption.simulateRoute = true;
+    _navigationOption.simulateRoute = false;
     _navigationOption.voiceInstructionsEnabled = false;
     _navigationOption.units = VoiceUnits.metric;
     _navigationOption.alternatives = false;
     _navigationOption.enableRefresh = false;
   }
-
   void clearOptions() {
     _navigationOption.bannerInstructionsEnabled = false;
     _navigationOption.voiceInstructionsEnabled = false;
   }
-
   Future<void> initialize() async {
     if (!mounted) return;
     _navigationOption = MapBoxNavigation.instance.getDefaultOptions();
@@ -170,7 +169,6 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
       _platformVersion = platformVersion;
     });
   }
-
   void beginNav() {
     _origin = WayPoint(name: "start", latitude: widget.startLatitude, longitude: widget.startLongitude);
     _destination = WayPoint(name: "end", latitude: widget.endLatitude, longitude: widget.endLongitude);
@@ -202,7 +200,6 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
     _controller?.clearRoute();
     Navigator.pop(context);
   }
-
   void startNav(MapBoxNavigationViewController control){
     if (_routeBuilt && !_isNavigating)
       {
@@ -210,13 +207,11 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
         _isNavigating = true;
       }
   }
-
   stopNav(MapBoxNavigationViewController control) async {
     clearOptions();
     control.finishNavigation();
     _isNavigating = false;
   }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -297,12 +292,34 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
                 ),
               ],
             ),
+            Positioned(
+              left: 5,
+              top: MediaQuery.sizeOf(context).height / 5,
+              child: Column(
+                children: [
+                  Container(
+                      width: MediaQuery.sizeOf(context).width/3,
+                      height: MediaQuery.sizeOf(context).height/3,
+                      child: CameraView()
+                  ),
+                  Container(
+                      width: MediaQuery.sizeOf(context).width/3,
+                      height: MediaQuery.sizeOf(context).height/7,
+                      child: Obx(() => objSpeech())
+                  ),
+                ],
+              ),
+            )
         ],
       ),
       ),
     );
   }
-
+  objSpeech() {
+    detectedText = Get.find<ScanController>().detectionResult.value;
+    _speak(detectedText);
+    return Text(detectedText);
+  }
   Future<void> _onEmbeddedRouteEvent(e) async {
     _distanceRemaining = await MapBoxNavigation.instance.getDistanceRemaining();
     _durationRemaining = await MapBoxNavigation.instance.getDurationRemaining();
@@ -314,7 +331,7 @@ class _TurnByTurnScreen extends State<TurnByTurnScreen> {
           new_instruction= progressEvent.currentStepInstruction;
           if (new_instruction != old_instruction) {
             String printer = maneuvers[countB]["instruction"];
-            _speak(printer);
+            AlanVoice.playText(printer);
             old_instruction = new_instruction;
             countB++;
           }

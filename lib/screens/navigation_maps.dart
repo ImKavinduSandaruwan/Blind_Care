@@ -36,7 +36,6 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint("got new command ${command.toString()}");});
     AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
-
   Future<void> _handleCommand(Map<String, dynamic> command) async {
     switch(command["command"]) {
       case "getPlace":
@@ -57,19 +56,23 @@ class _LocationMapState extends State<LocationMap> {
   @override
   void initState(){
     super.initState();
-    ever(scanController.detectionResult, (dynamic _) {
-      _speak(scanController.detectionResult.value);
-    });
     _requestLocationPermission();
     apiKey = 'AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo';
     googlePlace = GooglePlace(apiKey);
     endFocusNode = FocusNode();
     _navReady = false;
   }
+  @override
+  void dispose() {
+    endFocusNode.dispose();
+    _destinationController.dispose();
+    _numberController.dispose();
+    scanController.dispose();
+    super.dispose();
+  }
 
   late TextEditingController _numberController = TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
-
   GoogleMapController? mapController;
   Set<Marker> markers = {};
   Position? currentPosition;
@@ -82,19 +85,22 @@ class _LocationMapState extends State<LocationMap> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
   String apiKey = "AIzaSyBhwULmCSuNyr7hpqt-u9zEHydv31ucMfo";
-
-
   bool _navReady = false;
-
   String _lastWords = '';
   String _numValue = '';
-
   bool _predictionsRead = false;
   bool _numberSelect = false;
-
   final FlutterTts _flutterTts = FlutterTts();
-
   ScanController scanController = ScanController();
+  var detectedText;
+  Future<bool> _checkIsActive() async {
+    var isActive = await AlanVoice.isActive();
+    if (isActive) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   void initTts() async {
     await _flutterTts.setLanguage("en-US");
@@ -102,10 +108,13 @@ class _LocationMapState extends State<LocationMap> {
     await _flutterTts.awaitSpeakCompletion(true);
   }
   _speak(String textSpeech) async {
-    await _flutterTts.speak(textSpeech);
-    await _flutterTts.awaitSpeakCompletion(true);
+    if (await _checkIsActive() == false) {
+      if(!textSpeech.toLowerCase().contains("others")){
+        await _flutterTts.speak(textSpeech);
+        await _flutterTts.awaitSpeakCompletion(true);
+      }
+    }
   }
-
   int? _getNumValue(){
     try {
       return int.parse(_numberController.text)-1;
@@ -113,7 +122,6 @@ class _LocationMapState extends State<LocationMap> {
       return null;
     }
   }
-
   startProcessSubOne() async {
     _enterDestination();
     await Future.delayed(Duration(seconds: 5));
@@ -121,7 +129,6 @@ class _LocationMapState extends State<LocationMap> {
     await Future.delayed(Duration(seconds: 3));
     await _selectLocation();
   }
-
   startProcessSubTwo() async {
     await _setData();
     Future.delayed(Duration(seconds: 3));
@@ -131,7 +138,6 @@ class _LocationMapState extends State<LocationMap> {
       _getPolyline();
     }
   }
-
   _enterDestination() async {
     predictions.clear();
     _lastWords = _destinationController.text;
@@ -139,16 +145,6 @@ class _LocationMapState extends State<LocationMap> {
     _predictionsRead = false;
     _numberSelect = false;
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    endFocusNode.dispose();
-    _destinationController.dispose();
-    _numberController.dispose();
-    scanController.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -282,7 +278,7 @@ class _LocationMapState extends State<LocationMap> {
                 Container(
                     width: MediaQuery.sizeOf(context).width/3,
                     height: MediaQuery.sizeOf(context).height/7,
-                    child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))
+                    child: Obx(() => objSpeech())
                 ),
               ],
             ),
@@ -292,9 +288,7 @@ class _LocationMapState extends State<LocationMap> {
     );
   }
   objSpeech() {
-    var detectedText = Get.find<ScanController>().detectionResult.value;
-    print("runner");
-    print(detectedText);
+    detectedText = Get.find<ScanController>().detectionResult.value;
     _speak(detectedText);
     return Text(detectedText);
   }
@@ -309,7 +303,6 @@ class _LocationMapState extends State<LocationMap> {
       });
     }
   }
-
   Future<void> _readPredictions() async {
     if (_predictionsRead){
       return null;
@@ -325,7 +318,6 @@ class _LocationMapState extends State<LocationMap> {
       }
     }
   }
-
   Future<void> _selectLocation() async {
     if (_numberSelect){
       return null;
@@ -340,7 +332,6 @@ class _LocationMapState extends State<LocationMap> {
     _numValue = _numberController.text;
     _numberSelect = true;
   }
-
   _setData() async {
     AlanVoice.playText(_numValue);
     int? num = _getNumValue();
@@ -368,13 +359,11 @@ class _LocationMapState extends State<LocationMap> {
       _navReady = false;
     }
   }
-
   void _onMapCreated(GoogleMapController controller){
     setState(() {
       mapController = controller;
     });
   }
-
   void _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -395,7 +384,6 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint('$e');
     }
   }
-
   Future<void> _requestLocationPermission() async {
     final status = await Permission.locationWhenInUse.request();
     if (status == PermissionStatus.granted) {
@@ -406,7 +394,6 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint('error');
     }
   }
-
   void openAppSettings() async {
     final url = Platform.isAndroid
         ? 'package:com.android.settings'
@@ -417,7 +404,6 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint('error');
     }
   }
-
   void _setDestination() async {
     s1 = currentPosition?.latitude;
     s2 = currentPosition?.longitude;
@@ -458,7 +444,6 @@ class _LocationMapState extends State<LocationMap> {
       );
     });
   }
-
   _addPolyLine() {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
@@ -466,7 +451,6 @@ class _LocationMapState extends State<LocationMap> {
     polylines[id] = polyline;
     setState(() {});
   }
-
   _getPolyline() async {
     polylineCoordinates.clear();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
