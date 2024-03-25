@@ -134,14 +134,14 @@ class _LocationMapState extends State<LocationMap> {
   }
   startProcessSubOne() async {
     _enterDestination();
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 3));
     await _readPredictions();
     await Future.delayed(Duration(seconds: 3));
     await _selectLocation();
   }
   startProcessSubTwo() async {
     await _setData();
-    Future.delayed(Duration(seconds: 3));
+    Future.delayed(Duration(seconds: 7));
     if (_navReady){
       _requestLocationPermission();
       _setDestination();
@@ -171,21 +171,20 @@ class _LocationMapState extends State<LocationMap> {
       ),
       body: Stack(
         children: [
-          if (currentPosition != null)
-            GoogleMap(
-              polylines: Set<Polyline>.of(polylines.values),
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  currentPosition!.latitude ?? 0.0,
-                  currentPosition!.longitude ?? 0.0,
-                ),
-                zoom: 15.0,
+          GoogleMap(
+            polylines: Set<Polyline>.of(polylines.values),
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                currentPosition!.latitude ?? 0.0,
+                currentPosition!.longitude ?? 0.0,
               ),
-              myLocationEnabled: true,
-              markers: markers,
-              padding: const EdgeInsets.only(top: 100.0),
+              zoom: 15.0,
             ),
+            myLocationEnabled: true,
+            markers: markers,
+            padding: const EdgeInsets.only(top: 100.0),
+          ),
           Positioned(
             top: 10.0,
             left: 10.0,
@@ -252,8 +251,8 @@ class _LocationMapState extends State<LocationMap> {
           ),
           Positioned(
             bottom: 0,
-            left: 10,
-            right: 75,
+            left: (MediaQuery.sizeOf(context).width/50) * 15,
+            right: (MediaQuery.sizeOf(context).width/50) * 12,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -265,8 +264,6 @@ class _LocationMapState extends State<LocationMap> {
                   child: TextButton(
                     onPressed: () {
                       _requestLocationPermission();
-                      print("runner");
-                      print(currentPosition?.latitude);
                       _setDestination();
                       _getPolyline();
                     },
@@ -278,23 +275,33 @@ class _LocationMapState extends State<LocationMap> {
             ),
           ),
           Positioned(
-            left: 5,
-            top: MediaQuery.sizeOf(context).height / 5,
+            left: (MediaQuery.sizeOf(context).width/50) * 1,
+            bottom: 10,
             child: Column(
               children: [
-                Container(
-                    width: MediaQuery.sizeOf(context).width/3,
-                    height: MediaQuery.sizeOf(context).height/3,
+                SizedBox(
+                    width: MediaQuery.sizeOf(context).width/4,
+                    height: MediaQuery.sizeOf(context).height/4,
                     child: CameraView()
-                    ),
+                ),
                 Container(
-                    width: MediaQuery.sizeOf(context).width/3,
-                    height: MediaQuery.sizeOf(context).height/7,
-                    child: Obx(() => objSpeech())
+                  width: MediaQuery.sizeOf(context).width/4,
+                  height: MediaQuery.sizeOf(context).height/18,
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                  ),
+                  child: Obx(() => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      objSpeech(),
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                  ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -302,7 +309,7 @@ class _LocationMapState extends State<LocationMap> {
   objSpeech() {
     detectedText = Get.find<ScanController>().detectionResult.value;
     _speak(detectedText);
-    return Text(detectedText);
+    return detectedText;
   }
   void autoCompleteSearch(String value) async{
     var result = await googlePlace.autocomplete.get(
@@ -345,7 +352,6 @@ class _LocationMapState extends State<LocationMap> {
     _numberSelect = true;
   }
   _setData() async {
-    AlanVoice.playText(_numValue);
     int? num = _getNumValue();
     try{
       if (num!<0 || num>= predictions.length) {
@@ -359,7 +365,7 @@ class _LocationMapState extends State<LocationMap> {
           endPosition = details.result;
           _destinationController.text = details.result!.name!;
           String finalPlace = _numberController.text+_destinationController.text;
-          AlanVoice.playText(finalPlace);
+          //AlanVoice.playText(finalPlace);
           predictions = [];
           _navReady = true;
         });
