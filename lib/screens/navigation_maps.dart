@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,19 +14,6 @@ import '../constants/constant.dart';
 import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-void main(){
-  runApp(mapPage());
-}
-
-class mapPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'NavMaps',
-      home: LocationMap(),
-    );
-  }
-}
 
 class LocationMap extends StatefulWidget {
   @override
@@ -45,6 +31,9 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint("got new command ${command.toString()}");});
     AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
+
+  /// Handles various commands received from the Alan AI dialog script.
+  /// Each command triggers a specific action within the app.
   Future<void> _handleCommand(Map<String, dynamic> command) async {
     switch(command["command"]) {
       case "getPlace":
@@ -62,6 +51,11 @@ class _LocationMapState extends State<LocationMap> {
         debugPrint("Unknown command");
     }
   }
+
+  /// Initializes the state of the widget.
+  /// This method is called once when creating the state.
+  /// It sets up the initial state of the widget, including requesting location permissions, initializing the Google Places API, and setting up focus nodes.
+  /// It also initializes a boolean flag to indicate whether navigation is ready.
   @override
   void initState(){
     super.initState();
@@ -71,6 +65,11 @@ class _LocationMapState extends State<LocationMap> {
     endFocusNode = FocusNode();
     _navReady = false;
   }
+
+  /// Releases resources held by the widget.
+  /// This method is called when the widget is removed from the widget tree permanently.
+  /// It disposes of the focus node, text controllers, and any other resources to prevent memory leaks.
+  /// Always ensure to call super.dispose() at the end to complete the disposal process.
   @override
   void dispose() {
     endFocusNode.dispose();
@@ -112,11 +111,22 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
+  /// Initializes the Text-to-Speech (TTS) settings.
+  /// This function sets the language to English (US),
+  /// adjusts the speech rate, and ensures that the TTS
+  /// engine waits for the completion of the current speech before starting a new one.
+  /// It uses the FlutterTts package to configure the TTS settings.
   void initTts() async {
     await _flutterTts.setLanguage("en-US");
     await _flutterTts.setSpeechRate(0.5);
     await _flutterTts.awaitSpeakCompletion(true);
   }
+
+  /// Asynchronously speaks the provided text using Text-to-Speech (TTS).
+  /// This function first checks if the TTS engine is active.
+  /// If the TTS engine is active and the text does not contain the word "others", it proceeds to speak the text.
+  /// It uses the FlutterTts package to convert the text to speech.
+  /// After speaking the text, it waits for the completion of the speech before proceeding.
   _speak(String textSpeech) async {
     if (await _checkIsActive() == false) {
       if(!textSpeech.toLowerCase().contains("others")){
@@ -125,6 +135,12 @@ class _LocationMapState extends State<LocationMap> {
       }
     }
   }
+
+  /// Attempts to parse the text from a TextEditingController as an integer.
+  /// This function subtracts 1 from the parsed integer value.
+  /// It uses a try-catch block to handle any FormatException that may occur during parsing.
+  /// If parsing is successful, it returns the parsed integer value minus 1.
+  /// If a FormatException occurs, it returns null.
   int? _getNumValue(){
     try {
       return int.parse(_numberController.text)-1;
@@ -132,6 +148,14 @@ class _LocationMapState extends State<LocationMap> {
       return null;
     }
   }
+
+  /// Asynchronously initiates a series of operations with delays between each step.
+  /// This function first calls _enterDestination to presumably enter a destination.
+  /// It then waits for 5 seconds using Future.delayed.
+  /// After the delay, it reads predictions by calling _readPredictions.
+  /// Another 3-second delay is introduced before selecting a location with _selectLocation.
+  /// The use of Future.delayed allows for pausing execution between operations,
+  /// which can be useful for simulating real-world delays or for UI feedback purposes.
   startProcessSubOne() async {
     _enterDestination();
     await Future.delayed(Duration(seconds: 5));
@@ -139,6 +163,13 @@ class _LocationMapState extends State<LocationMap> {
     await Future.delayed(Duration(seconds: 3));
     await _selectLocation();
   }
+
+  /// Asynchronously sets data, waits for a short duration, and conditionally performs location-related operations.
+  /// This function first sets data by calling _setData and waits for 3 seconds using Future.delayed.
+  /// It then checks if navigation is ready (_navReady) before proceeding with location-related operations.
+  /// If navigation is ready, it requests location permission, sets the destination, and retrieves a polyline.
+  /// The use of Future.delayed allows for pausing execution between operations,
+  /// which can be useful for simulating real-world delays or for UI feedback purposes.
   startProcessSubTwo() async {
     await _setData();
     Future.delayed(Duration(seconds: 3));
@@ -148,6 +179,13 @@ class _LocationMapState extends State<LocationMap> {
       _getPolyline();
     }
   }
+
+  /// Asynchronously processes the destination input for autocomplete suggestions.
+  /// This function clears any existing predictions, retrieves the last entered
+  /// words from the destination controller,
+  /// and initiates an autocomplete search based on those words.
+  /// It also resets flags for predictions read and number selection
+  /// to ensure a fresh start for the next destination input.
   _enterDestination() async {
     predictions.clear();
     _lastWords = _destinationController.text;
@@ -155,6 +193,8 @@ class _LocationMapState extends State<LocationMap> {
     _predictionsRead = false;
     _numberSelect = false;
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -299,11 +339,24 @@ class _LocationMapState extends State<LocationMap> {
       ),
     );
   }
+
+
+  /// Processes the detected text from a scan and speaks it out using Text-to-Speech (TTS).
+  /// This function retrieves the detection result from the ScanController,
+  /// speaks the detected text using the _speak method,
+  /// and returns a Text widget displaying the detected text.
+  /// It leverages the GetX package for dependency injection and state management,
   objSpeech() {
     detectedText = Get.find<ScanController>().detectionResult.value;
     _speak(detectedText);
     return Text(detectedText);
   }
+
+  /// Asynchronously performs an autocomplete search for location suggestions using the Google Places API.
+  /// This function takes a search value as input and sends a request to the Google Places API to get autocomplete suggestions.
+  /// It specifies the region as "LK" (Sri Lanka) for the search.
+  /// Upon receiving the results, it prints the predictions and updates the
+  /// UI state with the new predictions if the widget is still mounted.
   void autoCompleteSearch(String value) async{
     var result = await googlePlace.autocomplete.get(
         value,
@@ -315,6 +368,13 @@ class _LocationMapState extends State<LocationMap> {
       });
     }
   }
+
+  /// Asynchronously reads and speaks out autocomplete predictions using Alan AI.
+  /// This function checks if predictions have already been read. If so, it returns early.
+  /// If predictions are available, it iterates through each prediction,
+  /// converting the index to a number string and speaking it out, followed by the prediction description.
+  /// It sets a flag to indicate that predictions have been read to prevent re-reading.
+  /// This function leverages the Alan AI Flutter plugin for text-to-speech functionality,
   Future<void> _readPredictions() async {
     if (_predictionsRead){
       return null;
@@ -330,6 +390,13 @@ class _LocationMapState extends State<LocationMap> {
       }
     }
   }
+
+  /// Asynchronously handles the selection of a location from autocomplete predictions.
+  /// This function checks if a location selection is already in progress or if there are no predictions available.
+  /// If either condition is true, it returns early without performing any action.
+  /// Otherwise, it prompts the user to select a number using Alan AI for text-to-speech functionality.
+  /// It then retrieves the selected number from a TextEditingController and sets a flag to indicate that a number selection is in progress.
+  /// This function leverages the Alan AI Flutter plugin for text-to-speech functionality,
   Future<void> _selectLocation() async {
     if (_numberSelect){
       return null;
@@ -344,6 +411,14 @@ class _LocationMapState extends State<LocationMap> {
     _numValue = _numberController.text;
     _numberSelect = true;
   }
+
+  /// Asynchronously sets data based on user input and updates the UI accordingly.
+  /// This function plays the selected number using Alan AI for text-to-speech functionality.
+  /// It retrieves the numeric value from the user input and checks if it's within the valid range of predictions.
+  /// If the number is valid, it fetches the place details from the Google Places API using the selected prediction's place ID.
+  /// Upon receiving the place details, it updates the UI with the new destination and clears the predictions list.
+  /// It also sets a flag to indicate that navigation is ready.
+  /// If the number is invalid or an error occurs, it sets a flag to indicate that navigation is not ready.
   _setData() async {
     AlanVoice.playText(_numValue);
     int? num = _getNumValue();
@@ -371,11 +446,18 @@ class _LocationMapState extends State<LocationMap> {
       _navReady = false;
     }
   }
+
+
   void _onMapCreated(GoogleMapController controller){
     setState(() {
       mapController = controller;
     });
   }
+
+  /// Asynchronously retrieves the current location of the device using the Geolocator package.
+  /// This function attempts to get the current position with high accuracy.
+  /// Upon successful retrieval, it updates the state with the current position and adds a marker to the map at the current location.
+  /// If an error occurs during the process, it prints the error message to the debug console.
   void _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -396,6 +478,11 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint('$e');
     }
   }
+
+  /// Asynchronously requests location permission from the user.
+  /// This function uses the PermissionHandler package to request location permission when the app is in use.
+  /// If the permission is granted, it proceeds to get the current location.
+  /// If the permission is permanently denied, it opens the app settings to allow the user to manually grant permission.
   Future<void> _requestLocationPermission() async {
     final status = await Permission.locationWhenInUse.request();
     if (status == PermissionStatus.granted) {
@@ -406,6 +493,14 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint('error');
     }
   }
+
+  /// Asynchronously opens the app settings page on the device.
+  /// This function checks the platform and constructs the appropriate URL to open the app settings.
+  /// For Android, it uses the package name to open the app settings directly.
+  /// For iOS, it uses a generic URL scheme to open the app settings.
+  /// It then attempts to launch the URL. If successful, it opens the app settings page.
+  /// If the URL cannot be launched, it prints an error message to the debug console.
+  /// This function leverages the platform-specific capabilities to open app settings,
   void openAppSettings() async {
     final url = Platform.isAndroid
         ? 'package:com.android.settings'
@@ -416,6 +511,12 @@ class _LocationMapState extends State<LocationMap> {
       debugPrint('error');
     }
   }
+
+  /// Asynchronously sets the destination on the map and adjusts the camera view to include both the current position and the destination.
+  /// This function retrieves the latitude and longitude of the current position and the destination.
+  /// It calculates the north-east and south-west bounds based on the current and destination positions.
+  /// It then animates the camera to fit these bounds, ensuring both the current position and the destination are visible on the map.
+  /// It removes any existing 'End' marker and adds a new marker at the destination position.
   void _setDestination() async {
     s1 = currentPosition?.latitude;
     s2 = currentPosition?.longitude;
@@ -456,6 +557,11 @@ class _LocationMapState extends State<LocationMap> {
       );
     });
   }
+
+  /// Adds a polyline to the map to represent a route or path.
+  /// This function creates a new polyline with a specified ID, color, and points.
+  /// The polyline is then added to the map's polylines collection.
+  /// Finally, it triggers a UI update to reflect the new polyline on the map.
   _addPolyLine() {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
@@ -463,6 +569,13 @@ class _LocationMapState extends State<LocationMap> {
     polylines[id] = polyline;
     setState(() {});
   }
+
+  /// Asynchronously fetches polyline points between two coordinates and adds them to the map.
+  /// This function clears any existing polyline coordinates and requests a route between the current position and the destination.
+  /// It uses the flutter_polyline_points package to decode the polyline string into a list of geo-coordinates.
+  /// If the result contains points, it adds these points to the polylineCoordinates list.
+  /// It then calls _addPolyLine to draw the polyline on the map.
+  /// After a delay, it navigates to a new screen, presumably to display turn-by-turn directions.
   _getPolyline() async {
     polylineCoordinates.clear();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
