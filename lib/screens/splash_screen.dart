@@ -17,10 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     navigateToMainWindow();
   }
 
-  /// Asynchronously navigates to the main window of the application after a specified splash duration.
-  /// This function introduces a delay equal to the splashDurationTime before navigating to the HomeScreen.
-  /// It uses Navigator.pushReplacement to replace the current route with the HomeScreen, ensuring
-  /// that the user cannot navigate back to the splash screen.
+  /// Navigate to the main page after 1.5 seconds
   Future<void> navigateToMainWindow() async {
     await Future.delayed(const Duration(milliseconds: splashDurationTime));
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));

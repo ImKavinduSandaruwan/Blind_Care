@@ -7,10 +7,7 @@ class AuthService{
   get auth => null;
   get fullName => null;
 
-  /// Asynchronously signs in the user using Google Sign-In and Firebase Authentication.
-  /// This function initiates the Google Sign-In process and retrieves the user's authentication details.
-  /// It then creates a credential using the access token and ID token obtained from Google Sign-In.
-  /// Finally, it signs in the user to Firebase using the created credential.
+  //Google sign in
   signInWithGoogle() async{
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
@@ -23,11 +20,7 @@ class AuthService{
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  /// Asynchronously signs in the user using Apple Sign-In and Firebase Authentication.
-  /// This function performs the Apple Sign-In request with the specified scopes.
-  /// Upon successful authorization, it creates an OAuth credential using the Apple ID credential's identity token.
-  /// The credential is then used to sign in the user to Firebase.
-  /// If the full name scope is requested and authorized, the user's display name in Firebase is updated accordingly.
+  //apple sign in
   Future<User>signInWithApple({List<Scope> scopes= const[]})async{
     final result= await TheAppleSignIn.performRequests([AppleIdRequest(requestedScopes: scopes)]);
     switch (result.status){

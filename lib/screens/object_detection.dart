@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:projectblindcare/components/camera_view.dart';
 import '../components/scan_controller.dart';
-
-///This file used to test object detection feature
+import '../constants/constant.dart';
+import 'package:camera/camera.dart';
 
 class ObjectDetectionApp extends StatelessWidget {
   @override
