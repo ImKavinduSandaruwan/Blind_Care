@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:projectblindcare/constants/constant.dart';
@@ -23,12 +24,7 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
     _locationFuture = getCurrentLocation();
   }
 
-  /// Asynchronously retrieves the current location of the device.
-  /// This function uses the Geolocator package to get the device's current position with low accuracy.
-  /// It also forces the use of the Android location manager for better compatibility.
-  /// Upon successful retrieval, it stores the latitude and longitude, fetches nearby pharmacies and hotels,
-  /// and returns the current position.
-  /// In case of failure, it prints the error and throws an exception.
+  ///This method is responsible for getting users current location
   Future<Position> getCurrentLocation() async {
     try {
       currentPosition = await Geolocator.getCurrentPosition(
@@ -46,11 +42,8 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
   }
 
 
-  /// Asynchronously fetches nearby places of a specified type within a 5000-meter radius.
-  /// This function constructs a URL for the Google Places API with the provided latitude, longitude, and type.
-  /// It then sends a GET request to the API and processes the response to extract relevant place information.
-  /// The function returns a list of maps, each containing the name, vicinity, latitude, and longitude of a nearby place.
-  /// In case of an error or if the API response is not OK, it throws an exception.
+  ///This method is responsible for make a http request using API key and fetch
+  ///relevant places according to the current location
   Future<List<Map<String, dynamic>>> getNearbyPlaces(double latitude, double longitude, String type) async {
     const apiKey = 'AIzaSyCTcc0okRqXnFjCqMxyK0qolmZdD1Mdss4';
     const radius = 5000;
@@ -80,11 +73,7 @@ class _PlaceOfInterestsState extends State<PlaceOfInterests> {
     }
   }
 
-  /// Fetches nearby pharmacies and hotels based on the provided latitude and longitude.
-  /// This function first retrieves a list of nearby pharmacies and then a list of nearby hotels.
-  /// It combines these lists into a single list of places and displays them in a modal bottom sheet.
-  /// The modal bottom sheet is dynamically sized to fit the content and provides a scrollable list of places.
-  /// In case of errors while fetching pharmacies or hotels, it displays an error message using a SnackBar.
+  ///This method is responsible for fetching nearby pharmacies and hotels
   void fetchNearbyPharmaciesAndHotel(double latitude, double longitude) {
     getNearbyPlaces(latitude, longitude, 'pharmacy').then((pharmacies) {
       getNearbyPlaces(latitude, longitude, 'lodging').then((hotels) {

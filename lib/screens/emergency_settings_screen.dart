@@ -200,7 +200,7 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EmergencyScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
           },
         ),
       ),

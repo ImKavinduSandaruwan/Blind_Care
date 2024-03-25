@@ -24,8 +24,6 @@ class _CustomerServiceState extends State<CustomerService> {
     AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
 
-  /// Handles various commands received from the Alan AI dialog script.
-  /// Each command triggers a specific action within the app.
   void _handleCommand(Map<String, dynamic> command) {
     switch (command["command"]) {
       case "getMsg":
@@ -35,9 +33,6 @@ class _CustomerServiceState extends State<CustomerService> {
     }
   }
 
-  /// Asynchronously sends a message to the Firestore database.
-  /// This function prepares the message data and adds it to the 'messages' collection in Firestore.
-  /// It uses the FirebaseFirestore instance to interact with Firestore.
   void sendDataToTheFireStore() async {
     FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
