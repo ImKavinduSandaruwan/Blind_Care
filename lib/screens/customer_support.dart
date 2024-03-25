@@ -79,80 +79,85 @@ class _CustomerServiceState extends State<CustomerService> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //Container that contains image of the screen
-            Container(
-              child: Image(
-                width: 300,
-                height: 300,
-                image: AssetImage('images/service.png'),
-              ),
-            ),
-
-            //Text field for getting user inputs
-            TextField(
-              controller: _textController,
-              decoration: InputDecoration(
-                hintText: 'Send Feedback',
-                border: OutlineInputBorder(),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    _textController.clear(); // Correctly using a function here
-                  },
-                  child: Icon(Icons.clear),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start, // Changed to start to avoid overflow
+            children: [
+              //Container that contains image of the screen
+              Container(
+                child: Image(
+                  width: 300,
+                  height: 300,
+                  image: AssetImage('images/service.png'),
                 ),
               ),
-            ),
+              SizedBox(height: 20), // Add space between widgets
 
-            //Rating bar
-            RatingBar.builder(
-              initialRating: 3.5,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
+              //Text field for getting user inputs
+              TextField(
+                controller: _textController,
+                decoration: InputDecoration(
+                  hintText: 'Send Feedback',
+                  border: OutlineInputBorder(),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _textController.clear(); // Correctly using a function here
+                    },
+                    child: Icon(Icons.clear),
+                  ),
+                ),
               ),
-              onRatingUpdate: (rating) {
+              SizedBox(height: 20), // Add space between widgets
 
-              },
-            ),
-
-            //Submit Button
-            MaterialButton(
-              onPressed:() {
-                sendDataToTheFireStore();
-              },
-              color: Colors.blue,
-              child: Text('Send', style: TextStyle(color: Colors.white)),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //google button
-                SquareTile(
-                    imagePath:'images/google.png',
-                    onTap: AuthService().signInWithGoogle
+              //Rating bar
+              RatingBar.builder(
+                initialRating: 3.5,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
                 ),
+                onRatingUpdate: (rating) {},
+              ),
+              SizedBox(height: 20), // Add space between widgets
 
-                SizedBox(width: 10,),
+              //Submit Button
+              MaterialButton(
+                onPressed:() {
+                  sendDataToTheFireStore();
+                },
+                color: Colors.blue,
+                child: Text('Send', style: TextStyle(color: Colors.white)),
+              ),
+              SizedBox(height: 20), // Add space between widgets
 
-                //Apple button
-                SquareTile(
-                    imagePath: 'images/apple.png',
-                    onTap: AuthService().signInWithApple
-                ),
-              ],
-            )
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //google button
+                  SquareTile(
+                      imagePath:'images/google.png',
+                      onTap: AuthService().signInWithGoogle
+                  ),
+
+                  SizedBox(width: 10,),
+
+                  //Apple button
+                  SquareTile(
+                      imagePath: 'images/apple.png',
+                      onTap: AuthService().signInWithApple
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
+
 }

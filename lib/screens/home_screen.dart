@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     /// Initializes the Alan AI button with a specific project ID.
     /// This enables voice interaction within the app using Alan AI's capabilities.
     /// The project ID is used to connect the app to the corresponding Alan AI project.
-    AlanVoice.addButton("72c64715b451423bf6ac4a0ab4e8c0ba2e956eca572e1d8b807a3e2338fdd0dc/stage");
+    AlanVoice.addButton("f717ed0da0a4848fa1f575b2fd049d642e956eca572e1d8b807a3e2338fdd0dc/stage");
     /// Adds a command handler to process commands received from the Alan AI dialog script.
     /// This handler is triggered when a command is sent from the dialog script, allowing the app to respond accordingly.
     AlanVoice.onCommand.add((command) => _handleCommand(command.data));
