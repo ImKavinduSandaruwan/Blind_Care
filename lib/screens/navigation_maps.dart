@@ -15,6 +15,20 @@ import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 
+void main(){
+  runApp(mapPage());
+}
+
+class mapPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'NavMaps',
+      home: LocationMap(),
+    );
+  }
+}
+
 class LocationMap extends StatefulWidget {
   @override
   State<LocationMap> createState() => _LocationMapState();
@@ -291,8 +305,8 @@ class _LocationMapState extends State<LocationMap> {
           ),
           Positioned(
             bottom: 0,
-            left: 10,
-            right: 75,
+            left: (MediaQuery.sizeOf(context).width/50) * 15,
+            right: (MediaQuery.sizeOf(context).width/50) * 12,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -302,7 +316,7 @@ class _LocationMapState extends State<LocationMap> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: TextButton(
-                    onPressed: () async {
+                    onPressed: () {
                       _requestLocationPermission();
                       _setDestination();
                       _getPolyline();
@@ -315,23 +329,33 @@ class _LocationMapState extends State<LocationMap> {
             ),
           ),
           Positioned(
-            left: 5,
-            top: MediaQuery.sizeOf(context).height / 8,
+            left: (MediaQuery.sizeOf(context).width/50) * 1,
+            bottom: 10,
             child: Column(
               children: [
-                Container(
-                    width: MediaQuery.sizeOf(context).width/2,
-                    height: MediaQuery.sizeOf(context).height/3,
+                SizedBox(
+                    width: MediaQuery.sizeOf(context).width/4,
+                    height: MediaQuery.sizeOf(context).height/4,
                     child: CameraView()
                 ),
                 Container(
-                    width: MediaQuery.sizeOf(context).width/3,
-                    height: MediaQuery.sizeOf(context).height/7,
-                    child: Obx(() => objSpeech())
+                  width: MediaQuery.sizeOf(context).width/4,
+                  height: MediaQuery.sizeOf(context).height/18,
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                  ),
+                  child: Obx(() => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      objSpeech(),
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                  ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -341,12 +365,12 @@ class _LocationMapState extends State<LocationMap> {
   /// Processes the detected text from a scan and speaks it out using Text-to-Speech (TTS).
   /// This function retrieves the detection result from the ScanController,
   /// speaks the detected text using the _speak method,
-  /// and returns a Text widget displaying the detected text.
+  /// and returns a String containing detected text.
   /// It leverages the GetX package for dependency injection and state management,
   objSpeech() {
     detectedText = Get.find<ScanController>().detectionResult.value;
     _speak(detectedText);
-    return Text(detectedText);
+    return detectedText;
   }
 
   /// Asynchronously performs an autocomplete search for location suggestions using the Google Places API.
