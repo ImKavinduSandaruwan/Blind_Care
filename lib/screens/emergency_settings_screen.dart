@@ -171,7 +171,7 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
 
                     },
                     icon: Icon(
-                        Icons.delete,
+                      Icons.delete,
                       color: Colors.red,
                     )
                 )
@@ -200,7 +200,7 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EmergencyScreen()));
           },
         ),
       ),
@@ -238,5 +238,4 @@ class EmergencySettingsScreenState extends State<EmergencySettingsScreen> {
     );
   }
 }
-
 

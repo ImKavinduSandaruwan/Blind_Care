@@ -1,16 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:projectblindcare/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:projectblindcare/screens/emergency_settings_screen.dart';
@@ -19,17 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-
-import '../main.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: EmergencyScreen(),
-    );
-  }
-}
 
 class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({Key? key}) : super(key: key);
@@ -230,91 +212,91 @@ class _emergencyFeature extends State<EmergencyScreen> {
       floatingActionButton:
       // Column(
       //   children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: screenHeight*0.2),
-              Center(
-                child: Container(
-                  width: screenWidth*0.9,
-                  height: screenHeight*0.1,
-                  // margin: EdgeInsets.only(top: 100.0),
-                  child:
-                  FloatingActionButton.extended(
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: screenHeight*0.2),
+          Center(
+            child: Container(
+              width: screenWidth*0.9,
+              height: screenHeight*0.1,
+              // margin: EdgeInsets.only(top: 100.0),
+              child:
+              FloatingActionButton.extended(
 
-                    onPressed: () async {
+                onPressed: () async {
 
-                      setState(() {
-                        // Set showSpinner to true to indicate loading state
-                        showSpinner = true;
-                      });
+                  setState(() {
+                    // Set showSpinner to true to indicate loading state
+                    showSpinner = true;
+                  });
 
-                      // Set msgOrCall to "msg" to notify user wants send current location
-                      msgOrCall = "msg";
+                  // Set msgOrCall to "msg" to notify user wants send current location
+                  msgOrCall = "msg";
 
-                      // Determine the current position of the device
-                      Position position = await _determinePosition();
+                  // Determine the current position of the device
+                  Position position = await _determinePosition();
 
-                      // Animate the camera to the current position
-                      googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-                          target: LatLng(position.latitude, position.longitude),
-                          // Set the target to the current latitude and longitude
-                          zoom: 14))); // Zoom in to level 14
+                  // Animate the camera to the current position
+                  googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                      target: LatLng(position.latitude, position.longitude),
+                      // Set the target to the current latitude and longitude
+                      zoom: 14))); // Zoom in to level 14
 
-                      // Clear existing markers on the map
-                      markers.clear();
+                  // Clear existing markers on the map
+                  markers.clear();
 
-                      // Add a marker to represent the current location on the map
-                      markers.add(Marker(
-                        markerId: const MarkerId("currentLocation"), // Unique identifier for the marker
-                        position: LatLng(position.latitude, position.longitude), // Set the position to the current latitude and longitude
-                      ));
+                  // Add a marker to represent the current location on the map
+                  markers.add(Marker(
+                    markerId: const MarkerId("currentLocation"), // Unique identifier for the marker
+                    position: LatLng(position.latitude, position.longitude), // Set the position to the current latitude and longitude
+                  ));
 
-                      // Update latitude and longitude variables with current values
-                      latitude = position.latitude;
-                      longitude = position.longitude;
+                  // Update latitude and longitude variables with current values
+                  latitude = position.latitude;
+                  longitude = position.longitude;
 
-                      // Show a bottom sheet for current location sharing
-                      showBottomSheetForCurrentLocationSharing(context);
+                  // Show a bottom sheet for current location sharing
+                  showBottomSheetForCurrentLocationSharing(context);
 
-                      setState(() {
-                        // Set showSpinner to false to indicate loading is complete
-                        showSpinner = false;
-                      });
-
-
+                  setState(() {
+                    // Set showSpinner to false to indicate loading is complete
+                    showSpinner = false;
+                  });
 
 
-                    },
-                    backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
-                    label: Text("Share current location"),
-                  ),
-                ),
+
+
+                },
+                backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
+                label: Text("Share current location"),
               ),
-              SizedBox(height: screenHeight*0.1),
-              Center(
-                child: Container(
-                  width: screenWidth*0.9,
-                  height: screenHeight*0.1,
-                  // margin: EdgeInsets.only(top: 100.0),
-                  child:
-                  FloatingActionButton.extended(
-
-                    onPressed: () async {
-
-                      msgOrCall = "call";
-
-                      showBottomSheet(context);
-
-                    },
-                    backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
-                    label: Text("Enable Emergency Situation"),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
+          SizedBox(height: screenHeight*0.1),
+          Center(
+            child: Container(
+              width: screenWidth*0.9,
+              height: screenHeight*0.1,
+              // margin: EdgeInsets.only(top: 100.0),
+              child:
+              FloatingActionButton.extended(
+
+                onPressed: () async {
+
+                  msgOrCall = "call";
+
+                  showBottomSheet(context);
+
+                },
+                backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
+                label: Text("Enable Emergency Situation"),
+              ),
+            ),
+          ),
+        ],
+      ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
@@ -370,50 +352,50 @@ class EmergencyCantactListHandler {
   static void addDynamicWidget(String name,String phone) {
     // Add a new dynamic widget to the list of dynamic widgets
     _emergencyFeature.dynamicWidgets.add(
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          // Container to hold the ElevatedButton widget
-          child: ElevatedButton(
-            style:ElevatedButton.styleFrom(
-              // Set button background color
-              backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
-            ) ,
-            onPressed: () async {
-              // If it's for calling, initiate a phone call
-              if(msgOrCall == "call"){
-                FlutterPhoneDirectCaller.callNumber(phone);
-                // If it's for messaging, prepare a message with current location and send it
-              }else if(msgOrCall == "msg"){
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            // Container to hold the ElevatedButton widget
+            child: ElevatedButton(
+              style:ElevatedButton.styleFrom(
+                // Set button background color
+                backgroundColor: Color.fromRGBO(153, 255, 153, 1.0),
+              ) ,
+              onPressed: () async {
+                // If it's for calling, initiate a phone call
+                if(msgOrCall == "call"){
+                  FlutterPhoneDirectCaller.callNumber(phone);
+                  // If it's for messaging, prepare a message with current location and send it
+                }else if(msgOrCall == "msg"){
 
-                final Uri smsLaunchUri = Uri(
-                  scheme: 'sms',
-                  path: phone,
-                  queryParameters: <String, String>{
-                    // Prepare the message body with current location
-                    'body': Uri.encodeComponent('Hey $name, I am in emergency situation. This is my current Location: https://maps.google.com/?q=$latitude,$longitude'),
-                  },
-                );
-                // Check if the device can handle the SMS launch URI
-                if(await canLaunchUrl(smsLaunchUri)){
-                  // If the URI can be launched, launch it
-                  await launchUrl(smsLaunchUri);
-                }else{
-                  // If the URI cannot be launched, print a message
-                  print("hello hello");
+                  final Uri smsLaunchUri = Uri(
+                    scheme: 'sms',
+                    path: phone,
+                    queryParameters: <String, String>{
+                      // Prepare the message body with current location
+                      'body': Uri.encodeComponent('Hey $name, I am in emergency situation. This is my current Location: https://maps.google.com/?q=$latitude,$longitude'),
+                    },
+                  );
+                  // Check if the device can handle the SMS launch URI
+                  if(await canLaunchUrl(smsLaunchUri)){
+                    // If the URI can be launched, launch it
+                    await launchUrl(smsLaunchUri);
+                  }else{
+                    // If the URI cannot be launched, print a message
+                    print("hello hello");
+                  }
+
                 }
-
-              }
-            },
-            child: ListTile(
-              // ListTile containing the name and call icon
-              leading: Icon(Icons.account_circle),
-              title: Text(name),
-              trailing: Icon(Icons.call),
+              },
+              child: ListTile(
+                // ListTile containing the name and call icon
+                leading: Icon(Icons.account_circle),
+                title: Text(name),
+                trailing: Icon(Icons.call),
+              ),
             ),
           ),
-        ),
-      )
+        )
     );
   }
 
@@ -473,25 +455,25 @@ class EmergencyCantactListHandler {
   }
 
 
-  // static getDataFromFirestore() async {
-  //   try {
-  //     // Get the collection reference
-  //     final QuerySnapshot<Map<String, dynamic>> data =
-  //         await FirebaseFirestore.instance.collection('EmgContacts').get();
-  //
-  //     // Process the documents in the snapshot
-  //     for (var contact in data.docs) {
-  //       // Access the data using contact.data()
-  //       Map<String, dynamic> contactData = contact.data();
-  //       // Now you can use contactData as needed
-  //       print(contactData);
-  //     }
-  //   } catch (error) {
-  //     // Handle any errors that occurred during the process
-  //     print("Error fetching data: $error");
-  //   }
-  // }
-  
+// static getDataFromFirestore() async {
+//   try {
+//     // Get the collection reference
+//     final QuerySnapshot<Map<String, dynamic>> data =
+//         await FirebaseFirestore.instance.collection('EmgContacts').get();
+//
+//     // Process the documents in the snapshot
+//     for (var contact in data.docs) {
+//       // Access the data using contact.data()
+//       Map<String, dynamic> contactData = contact.data();
+//       // Now you can use contactData as needed
+//       print(contactData);
+//     }
+//   } catch (error) {
+//     // Handle any errors that occurred during the process
+//     print("Error fetching data: $error");
+//   }
+// }
+
 
 }
 //
@@ -565,4 +547,3 @@ class EmergencyCantactListHandler {
 //   }
 //
 // }
-

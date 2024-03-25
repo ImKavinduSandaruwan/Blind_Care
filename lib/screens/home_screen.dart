@@ -19,10 +19,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ///Implementing alan AI
   _HomeScreenState() {
+    /// Initializes the Alan AI button with a specific project ID.
+    /// This enables voice interaction within the app using Alan AI's capabilities.
+    /// The project ID is used to connect the app to the corresponding Alan AI project.
     AlanVoice.addButton("72c64715b451423bf6ac4a0ab4e8c0ba2e956eca572e1d8b807a3e2338fdd0dc/stage");
+    /// Adds a command handler to process commands received from the Alan AI dialog script.
+    /// This handler is triggered when a command is sent from the dialog script, allowing the app to respond accordingly.
     AlanVoice.onCommand.add((command) => _handleCommand(command.data));
   }
 
+  /// Handles various commands received from the Alan AI dialog script.
+  /// Each command triggers a specific action within the app.
   void _handleCommand(Map<String, dynamic> command) {
     switch(command["command"]) {
       case "police":
@@ -57,7 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  ///Navigating to the place of interest screen
+  /// Navigates to the PlaceOfInterests screen.
+  /// This function is called when the "poi" command is received from the Alan AI dialog script.
+  /// It uses the Navigator.push method to transition to the PlaceOfInterests screen,
+  /// which is expected to display points of interest relevant to the user.
   void executePoi(){
     Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceOfInterests()));
   }
@@ -117,10 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       'Blind Care',
                                       style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 30,
-                                        letterSpacing: 1.5,
-                                        fontWeight: FontWeight.bold
+                                          fontFamily: 'Poppins',
+                                          fontSize: 30,
+                                          letterSpacing: 1.5,
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                     Text(
@@ -177,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           FunctionCard("images/emergency.png","Emergency",(){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => EmergencyScreen()));
                             /// Add navigation route for emergency page
                           }),
                           FunctionCard("images/service.png","Help Center",(){

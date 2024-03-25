@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:projectblindcare/components/camera_view.dart';
 import '../components/scan_controller.dart';
-import '../constants/constant.dart';
-import 'package:camera/camera.dart';
+
+///This file used to test object detection feature
 
 class ObjectDetectionApp extends StatelessWidget {
   @override
@@ -30,19 +30,19 @@ class _ObjectDetectionState extends State<ObjectDetection> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-        child: Column(
-          children: [
-            Container(
-                width: screenWidth/2,
-                height: screenHeight/2,
-                child: CameraView()),
-            Container(
-                width: screenWidth,
-                height: screenHeight/2,
-                child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          Container(
+              width: screenWidth/2,
+              height: screenHeight/2,
+              child: CameraView()),
+          Container(
+              width: screenWidth,
+              height: screenHeight/2,
+              child: Obx(() => Text(Get.find<ScanController>().detectionResult.value))
+          ),
+        ],
+      ),
     );
   }
 }
